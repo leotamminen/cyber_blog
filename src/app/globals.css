@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --link-color: #1e90ff; /* Linkkien oletusväri */
+  --footer-background: #222; /* Footerin taustaväri */
+  --footer-foreground: #ffffff; /* Footerin tekstiväri */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --link-color: #82b4ff; /* Linkkien väri tummassa tilassa */
+    --footer-background: #171717;
+    --footer-foreground: #d1d1d1;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Footerin tyyli */
+.footer {
+  background-color: var(--footer-background);
+  color: var(--footer-foreground);
+  padding: 20px 10px;
+  text-align: center;
+}
+
+.footer a {
+  color: var(--link-color);
+  text-decoration: none;
+  margin: 0 10px;
+  transition: color 0.3s ease;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.footer-links,
+.footer-social {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+@media (min-width: 768px) {
+  .footer-content {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+/* Linkkien yleiset tyylit */
+a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  transition: color 0.2s ease-in-out;
+}
