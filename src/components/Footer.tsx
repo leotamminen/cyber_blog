@@ -1,5 +1,7 @@
+import Link from "next/link";
+
 const Footer = () => {
-  const currentYear = new Date().getFullYear(); // Hakee nykyisen vuoden
+  const currentYear = new Date().getFullYear(); // Always gets the current year.
 
   return (
     <div className="bg-gray-800 text-gray-300 py-6">
@@ -8,6 +10,10 @@ const Footer = () => {
         <p className="text-sm text-gray-400">
           © {currentYear} Breaking the Firewall. All rights reserved.
         </p>
+        {/* Link to Learn page */}
+        <Link href="/learn" className="text-blue-400 hover:underline">
+          Learn more
+        </Link>
       </div>
     </div>
   );

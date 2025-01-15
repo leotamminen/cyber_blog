@@ -20,10 +20,31 @@
   }
 }
 
+/* Reset margins, paddings, and ensure full width/height */
+html,
 body {
-  color: var(--foreground);
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
   background: var(--background);
+  color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box; /* Include padding in width/height calculations */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/* Layout adjustments for full-width consistency */
+body > div#__next {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure the layout spans full viewport height */
 }
 
 /* Footerin tyyli */
@@ -32,6 +53,7 @@ body {
   color: var(--footer-foreground);
   padding: 20px 10px;
   text-align: center;
+  width: 100%; /* Ensure footer spans full width */
 }
 
 .footer a {
@@ -76,4 +98,51 @@ a {
 a:hover {
   text-decoration: underline;
   transition: color 0.2s ease-in-out;
+}
+
+.code-block {
+  background: linear-gradient(
+    to right,
+    #1e3a8a,
+    #1d4ed8,
+    #312e81
+  ); /* Gradient matching blog theme */
+  color: #d1d5db; /* Light text */
+  padding: 1rem;
+  border-radius: 8px;
+  font-family: "Fira Code", monospace; /* Coding font */
+  font-size: 0.9rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Smooth shadow */
+}
+
+.code-block .keyword {
+  color: #fca5a5; /* Light red */
+}
+
+.code-block .function {
+  color: #93c5fd; /* Light blue */
+}
+
+.code-block .variable {
+  color: #fbbf24; /* Yellow */
+}
+
+.code-block .comment {
+  color: #9ca3af; /* Gray */
+  font-style: italic;
+}
+
+:root {
+  --codeblock-bg: #fee0e2; /* Light blue for light mode */
+  --codeblock-text: #1e3a8a; /* Dark blue text for light mode */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --codeblock-bg: #1e3a8a; /* Dark blue for dark mode */
+    --codeblock-text: #e0f2fe; /* Light blue text for dark mode */
+  }
 }

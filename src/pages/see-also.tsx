@@ -1,7 +1,7 @@
 export default function SeeAlso() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8 bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-700 text-white dark:from-gray-800 dark:via-gray-900 dark:to-black dark:text-gray-200">
-      <h1 className="text-4xl font-extrabold mb-6 drop-shadow-md">
+    <div className="flex flex-col items-center justify-center min-h-screen w-full px-4 bg-gradient-to-r from-blue-800 via-cyan-700 to-blue-500 text-white dark:from-gray-900 dark:via-black dark:to-blue-900 dark:text-gray-200 pt-[5rem] pb-[7rem]">
+      <h1 className="text-4xl font-extrabold mb-6 text-center drop-shadow-md">
         Recommended Resources
       </h1>
       <p className="text-center text-lg max-w-2xl">

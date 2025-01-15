@@ -1,7 +1,9 @@
 export default function Learn() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white dark:from-gray-800 dark:via-gray-900 dark:to-black dark:text-gray-200">
-      <h1 className="text-4xl font-extrabold mb-6 drop-shadow-md">Learn</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen w-full px-4 bg-gradient-to-r from-blue-800 via-cyan-700 to-blue-500 text-white dark:from-gray-900 dark:via-black dark:to-blue-900 dark:text-gray-200 pt-[5rem] pb-[7rem]">
+      <h1 className="text-4xl font-extrabold mb-6 text-center drop-shadow-md">
+        Learn
+      </h1>
       <p className="text-center text-lg max-w-2xl">
         Welcome to the Learning Hub of Breaking the Firewall! This section is
         dedicated to sharing knowledge, insights, and practical guides in the
