@@ -178,8 +178,218 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
     title: "Understanding DNS Spoofing",
     summary:
       "Learn how DNS spoofing works and how to protect against this cyber threat.",
-    content:
-      "DNS spoofing redirects users to fraudulent websites by altering DNS records. This article explains how it works, its risks, and the steps to secure your network using DNSSEC and monitoring tools.",
+    date: "4 October 2024",
+    content: [
+      {
+        type: "h1",
+        content: "My DNS spoofing experiment for learning purposes",
+      },
+      {
+        type: "p",
+        content: "First of all I opened Kali.",
+      },
+      {
+        type: "p",
+        content: `Then I ran`,
+      },
+      {
+        type: "code",
+        content: `sudo apt update\nsudo apt install apache2`,
+      },
+      {
+        type: "p",
+        content: `After that I opened the server using`,
+      },
+      {
+        type: "code",
+        content: `sudo service apache2 start\nsudo service apache2 status`,
+      },
+      {
+        type: "p",
+        content: `And checked the IP adress by running \`sudo ifconfig\`\n
+        It seems to be inet -> 172.24.50.120\n
+        Then I copy pasted the IP address to my browsers address bar.`,
+      },
+      {
+        type: "p",
+        content: `After that I navigated to \`cd /var/www/html/\`\n
+        deleted the index.html and made new one to replace that one.`,
+      },
+      {
+        type: "p",
+        content: `BE CAUTIOUS the next command deletes everything:`,
+      },
+      {
+        type: "code",
+        content: `sudo rm -rf *`,
+      },
+
+      {
+        type: "code",
+        content: `// Then I created and opened the index.html using nano\nsudo touch index.html\nsudo nano index.html\n\n// The code below is the placeholder for the new index.html\n<!DOCTYPE html>
+<html>
+<head>
+    <title>Test</title>
+</head>
+<body>
+    <h1>DNS Spoofing -testsite</h1>
+    <p>This is only a test in my home network.</p>
+</body>
+</html>
+`,
+      },
+      {
+        type: "p",
+        content: `I saved the file using CTRL + O and closed nano with CTRL + X.\n
+        I feel like these can be often be easily forgotten if you are not experienced with linux.`,
+      },
+      {
+        type: "h1",
+        content: `Testing the environment with another device`,
+      },
+      {
+        type: "p",
+        content: `I tested with my laptop.\n
+        First, I opened browser in my laptop that is in the same Wi-Fi network, and navigated to the original machine's IP address. I made sure I saw the just freshly made test site.`,
+      },
+
+      {
+        type: "image",
+        src: "/firewall_graph.png",
+        alt: "The test was successful.",
+        caption:
+          "Picture 1: The view of my laptop's browser, the test was successful.",
+      },
+      {
+        type: "p",
+        content: "After that I used dsniff, it can be installed by",
+      },
+      { type: "code", content: "sudo apt install dsniff" },
+      { type: "p", content: "Then I enabled IP forward function:" },
+
+      {
+        type: "code",
+        content:
+          "// This allows traffic to be routed on the Kali device:\necho 1 | sudo tee /proc/sys/net/ipv4/ip_forward",
+      },
+      {
+        type: "p",
+        content:
+          "Then I installed and configured ettercap graphical and edited the etter.dns file:",
+      },
+      {
+        type: "code",
+        content:
+          "sudo apt install ettercap-graphical\nsudo nano /etc/ettercap/etter.dns",
+      },
+      {
+        type: "code",
+        content: `// I added my target domain to the file and pointed it to the IP address of the Kali machine:\nwww.example.com    A    172.24.50.120
+*.example.com      A    172.24.50.120
+`,
+      },
+      { type: "p", content: "I launched ettercap in graphical mode." },
+      {
+        type: "code",
+        content: `// -G tag for graphical interface\nsudo ettercap -G`,
+      },
+
+      {
+        type: "code",
+        content: `import './main.css' //personal main.css that I created
+
+export default function Home() {
+  return (
+    <main className="main">
+      <div className="mainDiv">
+        <h1 className="bigTitle"><span className="welcomeTexjt">Welcome</span> to my blog </h1>
+        <div className='research'>scroll down to discover</div>
+        <div className="line"/>
+      </div>
+    </main>
+  )
+}`,
+      },
+      { type: "h2", content: "Setting Up the Environment" },
+      {
+        type: "p",
+        content:
+          "I created a new virtual machine in Virtualbox for both pfSense and tinyCore Linux. The tinyCore was used as the server that is running on the internal network and has the static IP address 10.0.10.100. I had some difficulties getting the connection working, but after all I managed to make it work. Then I opened my browser and navigated to 192.168.56.101, which was the address of the pfSense web configurator. I went through the install wizard following the instructions. I added the Add upstream route to the lab server from System->Routing. Add new gateway and I made sure that t the IPv4 upstream gateway is selected correctly, because I first missed this detail.",
+      },
+      {
+        type: "p",
+        content:
+          "After that I ran “route add 10.0.10.0 MASK 255.255.255.0 192.168.56.101”",
+      },
+      {
+        type: "image",
+        src: "/ifconfig.png",
+        alt: "Firewall rules configuration interface",
+        caption: "Picture 3: ifconfig command",
+      },
+      {
+        type: "p",
+        content:
+          "Then I ran the PFSense virtualmachine. From the console, I configured the PFSense firewall LAN adapter to use DHCP. After these I was able to navigate to `192.168.56.101` in my browser to access the PFSense firewall admin console.",
+      },
+
+      {
+        type: "p",
+        content:
+          "I proceeded with the install wizard and used the default values.",
+      },
+      {
+        type: "p",
+        content: `Hostname: Leo-PFSense\n
+Static IP address: 10.0.10.1\n
+Subnet mask: 24\n
+Block private networks and loopback addresses: NOT selected\n
+Block bogon networks: NOT selected\n
+LAN subnet mask: 24\n
+Admin password: Pass1234\n
+\n
+Then I added an upstream route to the lab server from System->Routing in the PFSense admin console with the following fields:\n
+• Interface: WAN\n
+• Address family: IPv4\n
+• Name: lab\n
+• Gateway: 10.0.10.100\n
+\n
+Also, I made sure that the IPv4 upstream gateway was selected correctly, because I first missed this detail.`,
+      },
+
+      { type: "h2", content: "Configuring WAN settings" },
+      {
+        type: "image",
+        src: "/task1_wan.png",
+        alt: "Firewall rules configuration interface",
+        caption: "Picture 4: WAN settings",
+      },
+      {
+        type: "p",
+        content:
+          "Then I opened console as an administrator (in Windows), And ran the command",
+      },
+      {
+        type: "code",
+        content: `route add 10.0.10.0 MASK 255.255.255.0 192.168.56.101`,
+      },
+      {
+        type: "p",
+        content:
+          "to set a route for the 10.0.10.0/24 network via 192.168.56.101.",
+      },
+      {
+        type: "p",
+        content:
+          "After this I was able to connect from my host to the server in the internal network by using `ping 10.0.10.100` from my host computers admin console.\n (See the screenshot below.)",
+      },
+      {
+        type: "image",
+        src: "/task1_pinging_working.png",
+        alt: "Successful pinging.",
+        caption: "Picture 5: Successful pinging.",
+      },
+    ],
   },
   {
     id: "7",
@@ -207,11 +417,124 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
   },
   {
     id: "10",
-    title: "Cybersecurity Careers: Paths and Opportunities hgghg",
+    title: "Learning Splunk and Nessus",
     summary:
-      "Discover the diverse career opportunities in cybersecurity and how to get started.",
-    content:
-      "The cybersecurity field offers roles like security analyst, ethical hacker, and SOC engineer. This article explores various career paths, required skills, and certifications to kickstart your cybersecurity career.",
+      "See how I started my journey to learning about SIEM and vulnerability management by diving into Splunk and Nessus. This exploration laid the groundwork for advancing my cybersecurity skills and applying these tools in real-world scenarios.",
+    date: "15 January 2025",
+    content: [
+      { type: "h1", content: "Exploring Splunk and Nessus" },
+      {
+        type: "p",
+        content:
+          "Splunk and Nessus are powerful tools in cybersecurity, enabling organizations to gain insights into their environments and identify vulnerabilities. In this project, I focused on learning how to use Splunk for log analysis and Nessus for vulnerability scanning to enhance overall security.",
+      },
+      {
+        type: "p",
+        content: `This project was part of a university course designed to provide hands-on experience with cybersecurity tools. The objective was to learn how to analyze logs using Splunk and detect vulnerabilities in a network using Nessus.\n
+      
+      For this project, I set up a virtual lab environment using tools like VirtualBox and Kali Linux. I used Splunk to monitor and analyze simulated network logs while Nessus was deployed to identify potential vulnerabilities in the environment. This hands-on experience helped solidify my understanding of how to leverage these tools to protect real-world systems.\n
+      
+      The project provided insights into log management, threat detection, and vulnerability scanning. It was an excellent opportunity to bridge theoretical knowledge with practical application, improving both my technical expertise and problem-solving skills.`,
+      },
+      {
+        type: "image",
+        src: "/firewall_graph.png",
+        alt: "Network topology used in the lab",
+        caption: "Picture 1: Network topology used in the lab",
+      },
+      {
+        type: "p",
+        content:
+          "Below is an example script I used to simulate log data for analysis in Splunk.",
+      },
+      {
+        type: "code",
+        content: `import './main.css' //personal main.css that I created
+      
+      export default function Home() {
+        return (
+          <main className="main">
+            <div className="mainDiv">
+              <h1 className="bigTitle"><span className="welcomeText">Welcome</span> to my Splunk and Nessus lab </h1>
+              <div className='research'>scroll down to discover</div>
+              <div className="line"/>
+            </div>
+          </main>
+        )
+      }`,
+      },
+      { type: "h2", content: "Setting Up the Environment" },
+      {
+        type: "p",
+        content:
+          "I created virtual machines in VirtualBox to host both Splunk and Nessus. Splunk was used for log analysis, while Nessus performed vulnerability scans on the network. I set up Splunk on a machine with a static IP address of 192.168.1.50. After troubleshooting some connectivity issues, I successfully configured both tools to interact within the virtual environment.",
+      },
+      {
+        type: "p",
+        content:
+          "After initial setup, I navigated to `192.168.1.50:8000` to access the Splunk Web interface. I went through the setup wizard and configured basic settings, including setting up data inputs for log collection.",
+      },
+      {
+        type: "image",
+        src: "/ifconfig.png",
+        alt: "Splunk interface for log configuration",
+        caption: "Picture 3: Splunk log configuration interface",
+      },
+      {
+        type: "p",
+        content:
+          "For Nessus, I installed the scanner on a separate virtual machine. I configured it to scan the local network and detect vulnerabilities. The scanner was accessed via `192.168.1.51:8834` in a web browser.",
+      },
+      {
+        type: "p",
+        content:
+          "I proceeded with configuring Nessus and initiated scans using default policies. This allowed me to identify several vulnerabilities in the simulated environment and assess their potential impact.",
+      },
+      {
+        type: "p",
+        content: `Hostname: Lab-Nessus\n
+      Static IP address: 192.168.1.51\n
+      Subnet mask: 24\n
+      Admin password: SecurePass123\n
+      \n
+      I added a scanning policy with the following fields:\n
+      • Scan Type: Basic Network Scan\n
+      • Target: 192.168.1.0/24\n
+      • Schedule: Manual\n`,
+      },
+      { type: "h2", content: "Configuring Data Inputs in Splunk" },
+      {
+        type: "image",
+        src: "/task1_wan.png",
+        alt: "Splunk data input configuration",
+        caption: "Picture 4: Configuring data inputs in Splunk",
+      },
+      {
+        type: "p",
+        content:
+          "I opened the Splunk Web interface and configured a data input source for monitoring system logs.",
+      },
+      {
+        type: "code",
+        content: `./splunk add monitor /var/log/syslog -sourcetype linux_syslog`,
+      },
+      {
+        type: "p",
+        content:
+          "This command enabled Splunk to start monitoring and indexing logs from the specified directory.",
+      },
+      {
+        type: "p",
+        content:
+          "After this configuration, I was able to view logs in Splunk and run queries to identify suspicious activity. Below is an example query I used to identify failed login attempts:\n`index=main sourcetype=linux_syslog action=failure`",
+      },
+      {
+        type: "image",
+        src: "/task1_pinging_working.png",
+        alt: "Successful log monitoring.",
+        caption: "Picture 5: Monitoring logs in Splunk.",
+      },
+    ],
   },
   {
     id: "11",
