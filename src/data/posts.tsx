@@ -232,7 +232,7 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
     <title>Test</title>
 </head>
 <body>
-    <h1>DNS Spoofing -testsite</h1>
+    <h1>DNS Spoofing test site</h1>
     <p>This is only a test in my home network.</p>
 </body>
 </html>
@@ -255,7 +255,7 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
 
       {
         type: "image",
-        src: "/firewall_graph.png",
+        src: "/laptop_successful_apache.jpeg",
         alt: "The test was successful.",
         caption:
           "Picture 1: The view of my laptop's browser, the test was successful.",
@@ -295,21 +295,12 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
       },
 
       {
-        type: "code",
-        content: `import './main.css' //personal main.css that I created
-
-export default function Home() {
-  return (
-    <main className="main">
-      <div className="mainDiv">
-        <h1 className="bigTitle"><span className="welcomeTexjt">Welcome</span> to my blog </h1>
-        <div className='research'>scroll down to discover</div>
-        <div className="line"/>
-      </div>
-    </main>
-  )
-}`,
+        type: "p",
+        content: `This post is very simplified version of what I really had to go trough to get the html to even appear in my other testing laptop. I had to manually make new firewall rule to allow all tcp 80 port traffic. I also had to make a port forwarding rule, that made sure external network (192.168.1.125:80) incoming traffic is directed to WSL2's internal network (127.27.160:80) where the Apache server was listening.
+        \nBiggest lesson learned here: Always when you configure, add or edit Windows/WSL firewall rules - remember to reboot the systems. I was stuck for a while and couldn't figure out where the problem was. When I shut down all machines and rebooted, all of a sudden everything magically worked.\n
+        And in the end, the whole project felt better at the end after a little struggle.`,
       },
+
       { type: "h2", content: "Setting Up the Environment" },
       {
         type: "p",
