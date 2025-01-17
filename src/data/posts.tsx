@@ -186,11 +186,11 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
       },
       {
         type: "p",
-        content: "First of all I opened Kali.",
+        content: "First of all I opened Kali linux in VirtualBox",
       },
       {
         type: "p",
-        content: `Then I ran`,
+        content: `If you don't have apache2 (used for server in this lab). Default kali image should have that, but you can install it by:`,
       },
       {
         type: "code",
@@ -198,7 +198,7 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
       },
       {
         type: "p",
-        content: `After that I opened the server using`,
+        content: ` After that I opened the server and verified that it is running by:`,
       },
       {
         type: "code",
@@ -213,7 +213,7 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
       {
         type: "p",
         content: `After that I navigated to \`cd /var/www/html/\`\n
-        deleted the index.html and made new one to replace that one.`,
+        and deleted the default apache index.html and the index.nginx-debian.html and made new index.html`,
       },
       {
         type: "p",
@@ -226,7 +226,7 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
 
       {
         type: "code",
-        content: `// Then I created and opened the index.html using nano\nsudo touch index.html\nsudo nano index.html\n\n// The code below is the placeholder for the new index.html\n<!DOCTYPE html>
+        content: `// Then I created and opened the index.html using nano.\n// This creates and opens the index.html in nano editor\nsudo nano index.html\n\n// The code below is the placeholder for the new index.html\n<!DOCTYPE html>
 <html>
 <head>
     <title>Test</title>
@@ -241,7 +241,7 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
       {
         type: "p",
         content: `I saved the file using CTRL + O and closed nano with CTRL + X.\n
-        I feel like these can be often be easily forgotten if you are not experienced with linux.`,
+        (I feel like these can be often be easily forgotten if you are not experienced with linux.)`,
       },
       {
         type: "h1",
@@ -259,6 +259,10 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
         alt: "The test was successful.",
         caption:
           "Picture 1: The view of my laptop's browser, the test was successful.",
+      },
+      {
+        type: "p",
+        content: "Consider this the first step done.",
       },
       {
         type: "p",
@@ -301,22 +305,29 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
         And in the end, the whole project felt better at the end after a little struggle.`,
       },
 
-      { type: "h2", content: "Setting Up the Environment" },
+      { type: "h2", content: "Ettercap" },
       {
         type: "p",
-        content:
-          "I created a new virtual machine in Virtualbox for both pfSense and tinyCore Linux. The tinyCore was used as the server that is running on the internal network and has the static IP address 10.0.10.100. I had some difficulties getting the connection working, but after all I managed to make it work. Then I opened my browser and navigated to 192.168.56.101, which was the address of the pfSense web configurator. I went through the install wizard following the instructions. I added the Add upstream route to the lab server from System->Routing. Add new gateway and I made sure that t the IPv4 upstream gateway is selected correctly, because I first missed this detail.",
+        content: `I was able to find my router as well as my other laptop from the hosts list.\n
+          I added the router (usually 192.168.1.1) as my Target1 and my target laptop to Target2.\n
+          If you are unsure, you can verify the machines by their mac address.`,
       },
       {
         type: "p",
-        content:
-          "After that I ran “route add 10.0.10.0 MASK 255.255.255.0 192.168.56.101”",
+        content: `After that I selected MITM menu -> ARP poisoning...\n
+        Selected Sniff remote connections and pressed OK.\n
+        This step fools the machines to think that Kali is the modem and directs the traffic through that!`,
       },
       {
         type: "image",
         src: "/ifconfig.png",
         alt: "Firewall rules configuration interface",
         caption: "Picture 3: ifconfig command",
+      },
+      {
+        type: "p",
+        content: `At first I could not get the example.com to direct to my spoofing site. The problem was that this method works only with IPv4 and not IPv6, so I had to force it to use IPv4. Also it happens that my older laptop's browser is very outdated, which suits my needs 
+        perfectly because this method doesn't work on the modern browsers because of how they are running TSL on top of DNS something ....?`,
       },
       {
         type: "p",
