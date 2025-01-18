@@ -51,10 +51,12 @@ export default function Post() {
   return (
     <PostLayout>
       {/* Post title */}
-      <h1 className="text-4xl font-extrabold mb-4 text-left">{post?.title}</h1>
+      <h1 className="text-5xl font-extrabold mb-10 text-left pt-[1rem]">
+        {post?.title}
+      </h1>
 
       {/* Meta information (author, dates) */}
-      <div className="text-left text-sm text-gray-600 dark:text-gray-400 mb-6">
+      <div className="text-left text-sm text-gray-800 dark:text-gray-400 pb-[3rem]">
         {post?.author && (
           <p>
             <span className="font-semibold">Author:</span> {post.author}
@@ -78,13 +80,16 @@ export default function Post() {
           switch (block.type) {
             case "h1":
               return (
-                <h1 key={index} className="text-3xl font-bold mb-4">
+                <h1 key={index} className="text-3xl font-bold mb-6">
                   {block.content || ""}
                 </h1>
               );
             case "h2":
               return (
-                <h2 key={index} className="text-2xl font-semibold mb-3">
+                <h2
+                  key={index}
+                  className="text-2xl font-semibold mb-3 pb-[1rem]"
+                >
                   {block.content || ""}
                 </h2>
               );
@@ -92,7 +97,7 @@ export default function Post() {
               return (
                 <div key={index} className="text-lg leading-relaxed mb-4">
                   {block.content?.split("\n").map((line, lineIndex) => (
-                    <p key={lineIndex} className="mb-2">
+                    <p key={lineIndex} className="mb-5">
                       {line.trim()}
                     </p>
                   ))}
@@ -100,7 +105,10 @@ export default function Post() {
               );
             case "image":
               return (
-                <figure key={index} className="my-6 text-center">
+                <figure
+                  key={index}
+                  className="my-6 text-center pt-[1rem] pb-[3rem]"
+                >
                   <Image
                     src={block.src!}
                     alt={block.alt || "Image"}
@@ -117,10 +125,12 @@ export default function Post() {
               );
             case "code":
               return (
-                <CodeBlock
-                  key={index}
-                  code={block.content || "No code provided"}
-                />
+                <figure key={index} className="my-6 text-center pb-[3rem]">
+                  <CodeBlock
+                    key={index}
+                    code={block.content || "No code provided"}
+                  />
+                </figure>
               );
             default:
               return null;

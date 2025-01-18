@@ -3,6 +3,7 @@ export const posts = [
     id: "1",
     title: "My Firewall Labs",
     author: "Leo Tamminen",
+    new: true,
     tags: "Firewall",
     summary:
       "Discover my firewall labs where I tested configurations and defense strategies by simulating attacks on my own network.",
@@ -27,26 +28,6 @@ This project helped me understand how networks work, how to set up rules to cont
         src: "/firewall_graph.png",
         alt: "Network topology used in the lab",
         caption: "Picture 1: Network topology used in the lab",
-      },
-      {
-        type: "p",
-        content: "Below is the code I entered in my Kali linux console.",
-      },
-      {
-        type: "code",
-        content: `import './main.css' //personal main.css that I created
-
-export default function Home() {
-  return (
-    <main className="main">
-      <div className="mainDiv">
-        <h1 className="bigTitle"><span className="welcomeTexjt">Welcome</span> to my blog </h1>
-        <div className='research'>scroll down to discover</div>
-        <div className="line"/>
-      </div>
-    </main>
-  )
-}`,
       },
       { type: "h2", content: "Setting Up the Environment" },
       {
@@ -186,6 +167,7 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
     title: "DNS Spoofing lab",
     author: "Leo Tamminen",
     tags: "DNS",
+    new: true,
     summary:
       "Learn how DNS spoofing works and how to protect against this cyber threat.",
     date: "10 January 2025",

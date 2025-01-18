@@ -20,6 +20,7 @@ export default function Blog() {
             date={post.date}
             summary={post.summary}
             author={post.author}
+            new={post.new}
           />
         ))}
       </div>

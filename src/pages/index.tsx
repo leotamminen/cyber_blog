@@ -45,6 +45,7 @@ export default function Index() {
             date={post.date}
             summary={post.summary}
             author={post.author}
+            new={post.new}
           />
         ))}
       </div>
