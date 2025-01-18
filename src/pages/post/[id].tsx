@@ -50,9 +50,29 @@ export default function Post() {
   // Render the post inside the PostLayout
   return (
     <PostLayout>
-      <h1 className="text-4xl font-extrabold mb-6 text-center">
-        {post?.title}
-      </h1>
+      {/* Post title */}
+      <h1 className="text-4xl font-extrabold mb-4 text-left">{post?.title}</h1>
+
+      {/* Meta information (author, dates) */}
+      <div className="text-left text-sm text-gray-600 dark:text-gray-400 mb-6">
+        {post?.author && (
+          <p>
+            <span className="font-semibold">Author:</span> {post.author}
+          </p>
+        )}
+        {post?.date && (
+          <p>
+            <span className="font-semibold">Published:</span> {post.date}
+          </p>
+        )}
+        {post?.edited && (
+          <p>
+            <span className="font-semibold">Edited:</span> {post.edited}
+          </p>
+        )}
+      </div>
+
+      {/* Post content */}
       {Array.isArray(post?.content) ? (
         post.content.map((block, index) => {
           switch (block.type) {
@@ -78,7 +98,6 @@ export default function Post() {
                   ))}
                 </div>
               );
-
             case "image":
               return (
                 <figure key={index} className="my-6 text-center">

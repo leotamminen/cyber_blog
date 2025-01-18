@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { posts } from "@/data/posts";
+import BlogCard from "@/components/BlogCard";
 
 export default function Index() {
-  // Filter the first 4 posts (1-4) and only show them in the front page.
+  // Filter the first 4 posts (1-4) and only show them on the front page.
   const firstFourPosts = posts.slice(0, 4);
 
   return (
@@ -33,21 +34,18 @@ export default function Index() {
         />
       </div>
 
+      {/* Blog Cards */}
       <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-4xl">
         {firstFourPosts.map((post) => (
-          <Link
+          <BlogCard
             key={post.id}
-            href={`/post/${post.id}`}
-            className="block p-6 bg-white text-gray-900 rounded-lg shadow-lg hover:shadow-xl transition dark:bg-gray-700 dark:text-gray-200 flex flex-col justify-between"
-          >
-            <div>
-              <h2 className="text-xl font-bold mb-2">{post.title}</h2>
-              <p className="text-sm">{post.summary}</p>
-            </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">
-              <span className="font-semibold">Published:</span> {post.date}
-            </p>
-          </Link>
+            id={post.id}
+            title={post.title}
+            tags={post.tags}
+            date={post.date}
+            summary={post.summary}
+            author={post.author}
+          />
         ))}
       </div>
     </div>

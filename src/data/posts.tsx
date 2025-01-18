@@ -2,6 +2,8 @@ export const posts = [
   {
     id: "1",
     title: "My Firewall Labs",
+    author: "Leo Tamminen",
+    tags: "Firewall",
     summary:
       "Discover my firewall labs where I tested configurations and defense strategies by simulating attacks on my own network.",
     date: "15 December 2024",
@@ -131,8 +133,10 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
   {
     id: "2",
     title: "My IDS/IPS labs",
+    author: "Leo Tamminen",
+    tags: "Intrusion detection/prevention",
     summary:
-      "Explore my IDS/IPS labs where I used Metasploitable to simulate attacks on my own network and test defense strategies.",
+      "Explore my IDS/IPS labs where I used Metasploitable to simulate attacks on my own network.",
     date: "18 December 2024",
     content: [
       {
@@ -151,6 +155,8 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
   {
     id: "3",
     title: "Securing and updating my Home Network",
+    author: "Leo Tamminen",
+    tags: "Configuring home Wi-Fi",
     summary: "See what I did and how I upgraded my home Wi-Fi security.",
     date: "10 September 2024",
     content:
@@ -159,6 +165,8 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
   {
     id: "4",
     title: "SIEM, AD ...",
+    author: "Leo Tamminen",
+    tags: "SIEM",
     summary:
       "Mastering Operating Systems and Enterprise Security: Linux, Windows, SIEM, and Azure AD.",
     date: "14 January 2025",
@@ -175,10 +183,13 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
   },
   {
     id: "6",
-    title: "Understanding DNS Spoofing",
+    title: "DNS Spoofing lab",
+    author: "Leo Tamminen",
+    tags: "DNS",
     summary:
       "Learn how DNS spoofing works and how to protect against this cyber threat.",
-    date: "4 October 2024",
+    date: "10 January 2025",
+    edited: "18 January 2025",
     content: [
       {
         type: "h1",
