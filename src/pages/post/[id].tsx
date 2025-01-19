@@ -4,6 +4,7 @@ import { posts } from "@/data/posts"; // Import posts from the data file
 import { redirectTo404 } from "@/utils/navigation"; // Import the global redirect function
 import PostLayout from "@/layouts/PostLayout"; // Import the reusable PostLayout component
 import Image from "next/image";
+import BlogCard from "@/components/BlogCard"; // Import BlogCard component
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
@@ -16,7 +17,7 @@ const customCodeBlockStyles: React.CSSProperties = {
   fontFamily: "'Fira Code', monospace",
   fontSize: "0.9rem",
   lineHeight: "1.5",
-  overflowX: "auto", // Removed type assertion
+  overflowX: "auto",
   border: "1px solid rgba(17, 16, 16, 0.1)",
   boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
 };
@@ -27,7 +28,7 @@ function CodeBlock({ code }: { code: string }) {
     <SyntaxHighlighter
       language="javascript"
       style={dark}
-      customStyle={customCodeBlockStyles} // Apply dynamic custom styles
+      customStyle={customCodeBlockStyles}
     >
       {code}
     </SyntaxHighlighter>
@@ -40,6 +41,10 @@ export default function Post() {
 
   // Ensure `id` is defined before finding the post
   const post = id ? posts.find((post) => post.id === id) : null;
+
+  // Separate pinned and non-pinned posts with a limit of 4 each
+  const pinnedPosts = posts.filter((post) => post.pinned).slice(0, 4); // Limit pinned posts
+  const otherPosts = posts.filter((post) => !post.pinned).slice(0, 4); // Limit other posts
 
   // Redirect to 404 if the post does not exist
   if (!post && id) {
@@ -147,6 +152,46 @@ export default function Post() {
       ) : (
         <p className="text-lg leading-relaxed">{post?.content || ""}</p>
       )}
+
+      {/* Render pinned posts */}
+      <div className="mt-10 pt-[3rem]">
+        <h2 className="text-3xl font-bold mb-4">Pinned Posts</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {pinnedPosts.map((pinnedPost) => (
+            <BlogCard
+              key={pinnedPost.id}
+              id={pinnedPost.id}
+              title={pinnedPost.title}
+              tags={pinnedPost.tags}
+              date={pinnedPost.date}
+              summary={pinnedPost.summary}
+              author={pinnedPost.author}
+              new={pinnedPost.new}
+              pinned={pinnedPost.pinned}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Render other posts */}
+      <div className="mt-10">
+        <h2 className="text-3xl font-bold mb-4">Other Posts</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {otherPosts.map((otherPost) => (
+            <BlogCard
+              key={otherPost.id}
+              id={otherPost.id}
+              title={otherPost.title}
+              tags={otherPost.tags}
+              date={otherPost.date}
+              summary={otherPost.summary}
+              author={otherPost.author}
+              new={otherPost.new}
+              pinned={otherPost.pinned}
+            />
+          ))}
+        </div>
+      </div>
 
       {/* Back to the top button */}
       <div className="text-center mt-10">

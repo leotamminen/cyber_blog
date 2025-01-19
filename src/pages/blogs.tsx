@@ -5,9 +5,21 @@ import BlogCard from "@/components/BlogCard";
 export default function Blog() {
   const [visiblePosts, setVisiblePosts] = useState(8); // Default number of visible posts
 
+  // Separate pinned and non-pinned posts
+  const pinnedPosts = posts.filter((post) => post.pinned);
+  const otherPosts = posts.filter((post) => !post.pinned);
+
   // Function to load more posts
   const loadMorePosts = () => {
     setVisiblePosts((prev) => prev + 8);
+  };
+
+  // Function to scroll back to the top
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   return (
@@ -25,7 +37,23 @@ export default function Blog() {
         <span className="font-bold">New</span> posts are also recommended by me.
       </p>
       <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-4xl">
-        {posts.slice(0, visiblePosts).map((post) => (
+        {/* Render Pinned Posts */}
+        {pinnedPosts.map((post) => (
+          <BlogCard
+            key={post.id}
+            id={post.id}
+            title={post.title}
+            tags={post.tags}
+            date={post.date}
+            summary={post.summary}
+            author={post.author}
+            new={post.new}
+            pinned={post.pinned}
+          />
+        ))}
+
+        {/* Render Non-Pinned Posts */}
+        {otherPosts.slice(0, visiblePosts).map((post) => (
           <BlogCard
             key={post.id}
             id={post.id}
@@ -40,13 +68,23 @@ export default function Blog() {
         ))}
       </div>
       {/* Load more button */}
-      {visiblePosts < posts.length && (
+      {visiblePosts < otherPosts.length ? (
         <div className="mt-10">
           <button
             onClick={loadMorePosts}
             className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-600 hover:to-cyan-600 dark:from-gray-700 dark:to-gray-600 dark:hover:from-gray-600 dark:hover:to-gray-500 transition duration-300"
           >
             Load more
+          </button>
+        </div>
+      ) : (
+        /* Back to the Top Button */
+        <div className="mt-10">
+          <button
+            onClick={scrollToTop}
+            className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-600 hover:to-cyan-600 dark:from-gray-700 dark:to-gray-600 dark:hover:from-gray-600 dark:hover:to-gray-500 transition duration-300"
+          >
+            Back to the top
           </button>
         </div>
       )}
