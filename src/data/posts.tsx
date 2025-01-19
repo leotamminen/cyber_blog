@@ -4,6 +4,7 @@ export const posts = [
     title: "My Firewall Labs",
     author: "Leo Tamminen",
     new: true,
+    pinned: true,
     tags: "Firewall",
     summary:
       "Discover my firewall labs where I tested configurations and defense strategies by simulating attacks on my own network.",
@@ -116,6 +117,7 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
     title: "My IDS/IPS labs",
     author: "Leo Tamminen",
     tags: "Intrusion detection/prevention",
+    pinned: true,
     summary:
       "Explore my IDS/IPS labs where I used Metasploitable to simulate attacks on my own network.",
     date: "18 December 2024",
@@ -168,6 +170,7 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
     author: "Leo Tamminen",
     tags: "DNS",
     new: true,
+    pinned: true,
     summary:
       "Learn how DNS spoofing works and how to protect against this cyber threat.",
     date: "10 January 2025",

@@ -47,6 +47,14 @@ export default function Post() {
     return null; // Return nothing while redirecting
   }
 
+  // Function to scroll back to the top
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   // Render the post inside the PostLayout
   return (
     <PostLayout>
@@ -139,6 +147,16 @@ export default function Post() {
       ) : (
         <p className="text-lg leading-relaxed">{post?.content || ""}</p>
       )}
+
+      {/* Back to the top button */}
+      <div className="text-center mt-10">
+        <button
+          onClick={scrollToTop}
+          className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-600 hover:to-cyan-600 dark:from-gray-700 dark:to-gray-600 dark:hover:from-gray-600 dark:hover:to-gray-500 transition duration-300"
+        >
+          Back to the top
+        </button>
+      </div>
     </PostLayout>
   );
 }
