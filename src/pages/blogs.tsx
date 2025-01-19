@@ -4,35 +4,38 @@ import BlogCard from "@/components/BlogCard";
 
 export default function Blog() {
   const [visiblePosts, setVisiblePosts] = useState(8); // Default total visible posts
-  const [sortOption, setSortOption] = useState("date"); // Default sort option
-
-  // Separate pinned and non-pinned posts
-  const pinnedPosts = posts.filter((post) => post.pinned);
-  const otherPosts = posts.filter((post) => !post.pinned);
+  const [sortOption, setSortOption] = useState("new"); // Default sort option is "new"
 
   // Function to sort posts based on the selected option
-  const sortedPosts = [...otherPosts].sort((a, b) => {
+  const sortedPosts = [...posts].sort((a, b) => {
+    // Apply date sorting independently, ignoring pinned
+    if (sortOption === "date") {
+      const dateA = a.date ? new Date(a.date).getTime() : 0;
+      const dateB = b.date ? new Date(b.date).getTime() : 0;
+      return dateB - dateA;
+    }
+
+    // Always prioritize pinned posts for other cases
+    if (a.pinned && !b.pinned) return -1; // a is pinned, b is not
+    if (!a.pinned && b.pinned) return 1; // b is pinned, a is not
+
+    // Apply additional sorting based on the selected option
     switch (sortOption) {
       case "new":
-        // Sort by the 'new' field (true first)
-        return (b.new ? 1 : 0) - (a.new ? 1 : 0);
-      case "pinned":
-        // Sort by the 'pinned' field (true first)
-        return Number(b.pinned) - Number(a.pinned);
-      case "date":
-        // Sort by the 'date' field (most recent first), with fallback for undefined dates
+        // Sort by 'new' (true first), then by date (most recent first)
+        if (b.new !== a.new) return (b.new ? 1 : 0) - (a.new ? 1 : 0);
         const dateA = a.date ? new Date(a.date).getTime() : 0;
         const dateB = b.date ? new Date(b.date).getTime() : 0;
         return dateB - dateA;
       default:
+        // Default behavior (no further sorting, maintain relative order)
         return 0;
     }
   });
 
   // Function to load more posts
   const loadMorePosts = () => {
-    const remainingSpace = 8 - pinnedPosts.length; // Adjust for pinned posts
-    setVisiblePosts((prev) => prev + remainingSpace);
+    setVisiblePosts((prev) => prev + 8);
   };
 
   // Function to scroll back to the top
@@ -64,29 +67,13 @@ export default function Blog() {
           onChange={(e) => setSortOption(e.target.value)}
           className="bg-gray-200 text-gray-800 rounded-lg py-2 px-4 dark:bg-gray-700 dark:text-white"
         >
+          <option value="new">Sort by Featured</option>
           <option value="date">Sort by Date</option>
-          <option value="new">Sort by New</option>
-          <option value="pinned">Sort by Pinned</option>
         </select>
       </div>
       <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-4xl">
-        {/* Render Pinned Posts */}
-        {pinnedPosts.map((post) => (
-          <BlogCard
-            key={post.id}
-            id={post.id}
-            title={post.title}
-            tags={post.tags}
-            date={post.date}
-            summary={post.summary}
-            author={post.author}
-            new={post.new}
-            pinned={post.pinned}
-          />
-        ))}
-
-        {/* Render Sorted Non-Pinned Posts */}
-        {sortedPosts.slice(0, visiblePosts - pinnedPosts.length).map((post) => (
+        {/* Render Sorted Posts */}
+        {sortedPosts.slice(0, visiblePosts).map((post) => (
           <BlogCard
             key={post.id}
             id={post.id}
@@ -101,7 +88,7 @@ export default function Blog() {
         ))}
       </div>
       {/* Load more button */}
-      {visiblePosts - pinnedPosts.length < otherPosts.length ? (
+      {visiblePosts < posts.length ? (
         <div className="mt-10">
           <button
             onClick={loadMorePosts}

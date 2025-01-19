@@ -21,6 +21,15 @@ export default function BlogCard({
   new: isNew = false, // Default to false if not provided
   pinned = false, // Default to false if not provided
 }: BlogCardProps) {
+  // Format the date in "Published 10 January 2025" format
+  const formattedDate = date
+    ? `Published ${new Intl.DateTimeFormat("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }).format(new Date(date))}`
+    : "Unknown Date";
+
   return (
     <div className="relative h-full group transition-transform transform hover:scale-105 hover:-translate-y-1 hover:shadow-2xl duration-300 ease-out">
       {/* Card with hover and slide effect */}
@@ -34,8 +43,7 @@ export default function BlogCard({
             {Array.isArray(tags) ? tags.join(", ") : tags || "No Tags"}
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            <span className="font-semibold">Published:</span>{" "}
-            {date || "Unknown"}
+            {formattedDate}
           </p>
         </div>
 
