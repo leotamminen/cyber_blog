@@ -3,15 +3,36 @@ import { posts } from "@/data/posts";
 import BlogCard from "@/components/BlogCard";
 
 export default function Blog() {
-  const [visiblePosts, setVisiblePosts] = useState(8); // Default number of visible posts
+  const [visiblePosts, setVisiblePosts] = useState(8); // Default total visible posts
+  const [sortOption, setSortOption] = useState("date"); // Default sort option
 
   // Separate pinned and non-pinned posts
   const pinnedPosts = posts.filter((post) => post.pinned);
   const otherPosts = posts.filter((post) => !post.pinned);
 
+  // Function to sort posts based on the selected option
+  const sortedPosts = [...otherPosts].sort((a, b) => {
+    switch (sortOption) {
+      case "new":
+        // Sort by the 'new' field (true first)
+        return (b.new ? 1 : 0) - (a.new ? 1 : 0);
+      case "pinned":
+        // Sort by the 'pinned' field (true first)
+        return Number(b.pinned) - Number(a.pinned);
+      case "date":
+        // Sort by the 'date' field (most recent first), with fallback for undefined dates
+        const dateA = a.date ? new Date(a.date).getTime() : 0;
+        const dateB = b.date ? new Date(b.date).getTime() : 0;
+        return dateB - dateA;
+      default:
+        return 0;
+    }
+  });
+
   // Function to load more posts
   const loadMorePosts = () => {
-    setVisiblePosts((prev) => prev + 8);
+    const remainingSpace = 8 - pinnedPosts.length; // Adjust for pinned posts
+    setVisiblePosts((prev) => prev + remainingSpace);
   };
 
   // Function to scroll back to the top
@@ -27,7 +48,7 @@ export default function Blog() {
       <h1 className="text-4xl font-extrabold mb-6 text-center pb-[1rem]">
         Breaking the Firewall Blog
       </h1>
-      <p className="text-center text-lg max-w-3xl leading-relaxed pb-[5rem]">
+      <p className="text-center text-lg max-w-3xl leading-relaxed pb-[2rem]">
         Welcome to <span className="font-bold">Breaking the Firewall Blog</span>
         , my personal <span className="font-bold">cybersecurity</span> learning
         blog.
@@ -36,7 +57,19 @@ export default function Blog() {
         suggest taking a look at them first.{" "}
         <span className="font-bold">New</span> posts are also recommended by me.
       </p>
-      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-4xl">
+      <div className="w-full max-w-4xl mb-4 flex justify-end">
+        {/* Sort By Dropdown */}
+        <select
+          value={sortOption}
+          onChange={(e) => setSortOption(e.target.value)}
+          className="bg-gray-200 text-gray-800 rounded-lg py-2 px-4 dark:bg-gray-700 dark:text-white"
+        >
+          <option value="date">Sort by Date</option>
+          <option value="new">Sort by New</option>
+          <option value="pinned">Sort by Pinned</option>
+        </select>
+      </div>
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-4xl">
         {/* Render Pinned Posts */}
         {pinnedPosts.map((post) => (
           <BlogCard
@@ -52,8 +85,8 @@ export default function Blog() {
           />
         ))}
 
-        {/* Render Non-Pinned Posts */}
-        {otherPosts.slice(0, visiblePosts).map((post) => (
+        {/* Render Sorted Non-Pinned Posts */}
+        {sortedPosts.slice(0, visiblePosts - pinnedPosts.length).map((post) => (
           <BlogCard
             key={post.id}
             id={post.id}
@@ -68,7 +101,7 @@ export default function Blog() {
         ))}
       </div>
       {/* Load more button */}
-      {visiblePosts < otherPosts.length ? (
+      {visiblePosts - pinnedPosts.length < otherPosts.length ? (
         <div className="mt-10">
           <button
             onClick={loadMorePosts}

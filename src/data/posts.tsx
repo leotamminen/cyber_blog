@@ -3,12 +3,11 @@ export const posts = [
     id: "1",
     title: "My Firewall Labs",
     author: "Leo Tamminen",
-    new: true,
     pinned: true,
     tags: "Firewall",
     summary:
       "Discover my firewall labs where I tested configurations and defense strategies by simulating attacks on my own network.",
-    date: "15 December 2024",
+    date: "2024-12-18",
     content: [
       { type: "h1", content: "Understanding Firewall Labs" },
       {
@@ -120,7 +119,7 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
     pinned: true,
     summary:
       "Explore my IDS/IPS labs where I used Metasploitable to simulate attacks on my own network.",
-    date: "18 December 2024",
+    date: "2024-12-15",
     content: [
       {
         type: "image",
@@ -141,7 +140,7 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
     author: "Leo Tamminen",
     tags: "Configuring home Wi-Fi",
     summary: "See what I did and how I upgraded my home Wi-Fi security.",
-    date: "10 September 2024",
+    date: "2024-10-12",
     content:
       "Securing your home network is essential to prevent unauthorized access and data breaches. This guide covers steps like changing default passwords, enabling WPA3 encryption, and setting up firewalls for enhanced security.",
   },
@@ -152,15 +151,19 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
     tags: "SIEM",
     summary:
       "Mastering Operating Systems and Enterprise Security: Linux, Windows, SIEM, and Azure AD.",
-    date: "14 January 2025",
+    date: "2025-01-10",
     content:
       "AI is revolutionizing cybersecurity by enabling faster detection and response to threats. Machine learning algorithms analyze vast data to identify anomalies, while automation streamlines incident management. However, adversarial AI also poses new challenges.",
   },
   {
     id: "5",
-    title: "Ethical Hacking: A Beginner's Guide",
-    summary:
-      "Get started with ethical hacking, and learn how to test and secure systems ethically.",
+    title: "Ethical Hacking",
+    author: "Leo Tamminen",
+    tags: "Ethical Hacking",
+    new: true,
+    pinned: true,
+    summary: "See how I started with ethical hacking and follow along.",
+    date: "2025-01-20",
     content:
       "Ethical hacking involves testing systems and networks to identify vulnerabilities before malicious hackers exploit them. This guide introduces you to tools, techniques, and the mindset needed to become a successful ethical hacker.",
   },
@@ -173,7 +176,7 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
     pinned: true,
     summary:
       "Learn how DNS spoofing works and how to protect against this cyber threat.",
-    date: "10 January 2025",
+    date: "2025-01-10",
     edited: "18 January 2025",
     content: [
       {
@@ -418,7 +421,7 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
     title: "Learning Splunk and Nessus",
     summary:
       "See how I started my journey to learning about SIEM and vulnerability management by diving into Splunk and Nessus. This exploration laid the groundwork for advancing my cybersecurity skills and applying these tools in real-world scenarios.",
-    date: "15 January 2025",
+    date: "2025-01-19",
     content: [
       { type: "h1", content: "Exploring Splunk and Nessus" },
       {
