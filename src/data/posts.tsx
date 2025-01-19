@@ -4,7 +4,7 @@ export const posts = [
     title: "My Firewall Labs",
     author: "Leo Tamminen",
     pinned: true,
-    tags: "Firewall",
+    tags: "Firewall, pfSense, tinyCore Linux",
     summary:
       "Discover my firewall labs where I tested configurations and defense strategies by simulating attacks on my own network.",
     date: "2024-12-18",
@@ -171,7 +171,7 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
     id: "6",
     title: "DNS Spoofing lab",
     author: "Leo Tamminen",
-    tags: "DNS",
+    tags: "DNS, ARP poisoning",
     new: true,
     pinned: true,
     summary:
@@ -397,6 +397,7 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
     title: "Introduction to Zero Trust Architecture",
     summary:
       "Understand the principles of zero trust architecture and its importance in modern cybersecurity.",
+    date: "2024-11-17",
     content:
       "Zero trust architecture enforces the principle of 'never trust, always verify,' ensuring secure access to systems and data. Learn how to implement this model using multi-factor authentication, identity management, and continuous monitoring.",
   },
@@ -405,6 +406,7 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
     title: "Phishing Scams: How to Spot and Avoid Them",
     summary:
       "Recognize the signs of phishing scams and protect your sensitive information.",
+    date: "2024-11-12",
     content:
       "Phishing scams trick users into providing personal data, such as login credentials and financial information. This guide offers tips to identify phishing attempts and secure your email and browsing habits.",
   },
@@ -413,6 +415,7 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
     title: "The Role of Encryption in Cybersecurity",
     summary:
       "Explore how encryption helps protect sensitive data and communications.",
+    date: "2024-11-7",
     content:
       "Encryption converts data into unreadable formats, ensuring that only authorized parties can access it. Learn about symmetric and asymmetric encryption, their applications, and best practices for implementing encryption in your systems.",
   },
@@ -539,33 +542,39 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
   },
   {
     id: "11",
-    title: "Cybersecurity Careers: Paths and Opportunities g",
+    title: "Cybersecurity Careers: Paths and Opportunities",
+    tags: "[PLACEHOLDER]",
     summary:
       "Discover the diverse career opportunities in cybersecurity and how to get started.",
+    date: "2024-8-16",
     content:
       "The cybersecurity field offers roles like security analyst, ethical hacker, and SOC engineer. This article explores various career paths, required skills, and certifications to kickstart your cybersecurity career.",
   },
   {
     id: "12",
-    title: "Cybersecurity Careers: Paths and Opportunities moi",
-    summary:
-      "Discover the diverse career opportunities in cybersecurity and how to get started.",
+    title: "[PLACEHOLDER]",
+    tags: "[PLACEHOLDER]",
+    summary: "[PLACEHOLDER]",
+    date: "2024-9-24",
     content:
       "The cybersecurity field offers roles like security analyst, ethical hacker, and SOC engineer. This article explores various career paths, required skills, and certifications to kickstart your cybersecurity career.",
   },
   {
     id: "13",
-    title: "Cybersecurity Careers: Paths and Opportunities gui",
-    summary:
-      "Discover the diverse career opportunities in cybersecurity and how to get started.",
+    title: "[PLACEHOLDER]",
+    tags: "[PLACEHOLDER]",
+    summary: "[PLACEHOLDER]",
+    date: "2024-9-23",
     content:
       "The cybersecurity field offers roles like security analyst, ethical hacker, and SOC engineer. This article explores various career paths, required skills, and certifications to kickstart your cybersecurity career.",
   },
   {
     id: "14",
     title: "Top 5 Cyber Threats in 2025",
+    tags: "[PLACEHOLDER]",
     summary:
       "Explore the most significant cyber threats that businesses and individuals face in 2025.",
+    date: "2024-9-17",
     content:
       "The top cyber threats in 2025 include ransomware attacks, phishing scams, zero-day exploits, insider threats, and supply chain attacks. Understanding these threats and implementing effective defenses is crucial to staying safe in the digital age.",
   },

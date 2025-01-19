@@ -5,13 +5,24 @@ import { posts } from "@/data/posts";
 import BlogCard from "@/components/BlogCard";
 
 export default function Index() {
-  const pinnedPosts = posts.filter((post) => post.pinned === true);
-  const otherPosts = posts.filter((post) => !post.pinned);
+  // Sort posts: Pinned first, then "new", then by date (most recent first)
+  const sortedPosts = [...posts].sort((a, b) => {
+    // Prioritize pinned posts
+    if (b.pinned !== a.pinned) return (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0);
 
-  const [visibleOtherPosts, setVisibleOtherPosts] = useState(0); // Initially no other posts visible
+    // Sort by 'new' (true first)
+    if (b.new !== a.new) return (b.new ? 1 : 0) - (a.new ? 1 : 0);
+
+    // Sort by date (most recent first)
+    const dateA = a.date ? new Date(a.date).getTime() : 0;
+    const dateB = b.date ? new Date(b.date).getTime() : 0;
+    return dateB - dateA;
+  });
+
+  const [visiblePosts, setVisiblePosts] = useState(4); // Initially show 4 posts
 
   const loadMorePosts = () => {
-    setVisibleOtherPosts((prev) => Math.min(prev + 4, otherPosts.length));
+    setVisiblePosts((prev) => Math.min(prev + 4, sortedPosts.length));
   };
 
   // Function to scroll back to the top
@@ -28,7 +39,19 @@ export default function Index() {
         Welcome to my Cybersecurity Blog
       </h1>
       <p className="text-center text-lg max-w-2xl">
-        Below are the pinned blog posts. All of the blogs can be found{" "}
+        Breaking the Firewall is my personal blog where update my journey
+        learning cybersecurity. I created the site with Next.js and TypeScript.
+        The real focus is on the blog posts, where I used most of my effort. I
+        can update the posts as my knowledge grows. My knowledge is mostly from
+        university courses and my own experiments, plus online research. Please
+        be respectful and do not copy paste my work without mentioning where
+        it’s from. <br /> That said, I am hoping to inspire others and many of
+        the blog posts are made in a way that they are kind of like a tutorials
+        where it is possible to follow along.
+        <br />
+        <br />
+        Below are the featured and newest blog posts where I recommend to taking
+        a look first. All of the blogs can be found{" "}
         <Link
           href="/blogs"
           className="underline text-blue-300 hover:text-blue-500"
@@ -51,23 +74,8 @@ export default function Index() {
 
       {/* Blog Cards */}
       <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-4xl">
-        {/* Render Pinned Posts */}
-        {pinnedPosts.map((post) => (
-          <BlogCard
-            key={post.id}
-            id={post.id}
-            title={post.title}
-            tags={post.tags}
-            date={post.date}
-            summary={post.summary}
-            author={post.author}
-            new={post.new}
-            pinned={post.pinned}
-          />
-        ))}
-
-        {/* Render Other Posts */}
-        {otherPosts.slice(0, visibleOtherPosts).map((post) => (
+        {/* Render Sorted Posts */}
+        {sortedPosts.slice(0, visiblePosts).map((post) => (
           <BlogCard
             key={post.id}
             id={post.id}
@@ -84,7 +92,7 @@ export default function Index() {
 
       {/* Load More or Back to the Top Button */}
       <div className="mt-10">
-        {visibleOtherPosts < otherPosts.length ? (
+        {visiblePosts < sortedPosts.length ? (
           <button
             onClick={loadMorePosts}
             className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-600 hover:to-cyan-600 dark:from-gray-700 dark:to-gray-600 dark:hover:from-gray-600 dark:hover:to-gray-500 transition duration-300"
