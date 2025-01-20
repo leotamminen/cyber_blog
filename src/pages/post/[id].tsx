@@ -1,10 +1,10 @@
 import { useRouter } from "next/router";
 import "../../styles/globals.css";
-import { posts } from "@/data/posts"; // Import posts from the data file
+import { useEffect, useState } from "react";
 import { redirectTo404 } from "@/utils/navigation"; // Import the global redirect function
 import PostLayout from "@/layouts/PostLayout"; // Import the reusable PostLayout component
 import Image from "next/image";
-import BlogCard from "@/components/BlogCard"; // Import BlogCard component
+import BlogCard from "@/components/BlogCard";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
@@ -35,22 +35,71 @@ function CodeBlock({ code }: { code: string }) {
   );
 }
 
+interface BlogPost {
+  id: string;
+  title: string;
+  author: string;
+  tags?: string;
+  summary: string;
+  content: Array<{
+    type: string;
+    content?: string;
+    src?: string;
+    alt?: string;
+    caption?: string;
+  }>;
+  pinned?: boolean;
+  new?: boolean;
+  date?: string;
+  edited?: string;
+}
+
 export default function Post() {
   const router = useRouter();
   const { id } = router.query;
 
-  // Ensure `id` is defined before finding the post
-  const post = id ? posts.find((post) => post.id === id) : null;
+  const [post, setPost] = useState<BlogPost | null>(null); // State for the current post
+  const [pinnedPosts, setPinnedPosts] = useState<BlogPost[]>([]); // State for pinned posts
+  const [otherPosts, setOtherPosts] = useState<BlogPost[]>([]); // State for other posts
+  const [loading, setLoading] = useState(true); // Loading state
 
-  // Separate pinned and non-pinned posts with a limit of 4 each
-  const pinnedPosts = posts.filter((post) => post.pinned).slice(0, 4); // Limit pinned posts
-  const otherPosts = posts.filter((post) => !post.pinned).slice(0, 4); // Limit other posts
+  useEffect(() => {
+    if (!id) return;
 
-  // Redirect to 404 if the post does not exist
-  if (!post && id) {
-    redirectTo404(router);
-    return null; // Return nothing while redirecting
-  }
+    // Fetch post data
+    const fetchPost = async () => {
+      try {
+        setLoading(true);
+
+        const [postResponse, pinnedResponse, otherResponse] = await Promise.all(
+          [
+            fetch(`/api/posts/${id}`), // Fetch the specific post
+            fetch(`/api/posts?pinned=true`), // Fetch pinned posts
+            fetch(`/api/posts?pinned=false`), // Fetch other posts
+          ]
+        );
+
+        if (!postResponse.ok) {
+          throw new Error("Post not found");
+        }
+
+        const postData = await postResponse.json();
+        const pinnedData = await pinnedResponse.json();
+        const otherData = await otherResponse.json();
+
+        setPost(postData);
+        setPinnedPosts(pinnedData.slice(0, 4)); // Limit pinned posts to 4
+        setOtherPosts(otherData.slice(0, 4)); // Limit other posts to 4
+      } catch (error) {
+        console.error("Error fetching post data:", error);
+        redirectTo404(router); // Redirect to 404 if the post is not found
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPost();
+  }, [id, router]);
 
   // Function to scroll back to the top
   const scrollToTop = () => {
@@ -60,35 +109,38 @@ export default function Post() {
     });
   };
 
-  // Render the post inside the PostLayout
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (!post) {
+    return null; // Render nothing if the post is not found
+  }
+
   return (
     <PostLayout>
-      {/* Post title */}
       <h1 className="text-5xl font-extrabold mb-10 text-left pt-[1rem]">
-        {post?.title}
+        {post.title}
       </h1>
-
-      {/* Meta information (author, dates) */}
       <div className="text-left text-sm text-gray-800 dark:text-gray-400 pb-[3rem]">
-        {post?.author && (
+        {post.author && (
           <p>
             <span className="font-semibold">Author:</span> {post.author}
           </p>
         )}
-        {post?.date && (
+        {post.date && (
           <p>
             <span className="font-semibold">Published:</span> {post.date}
           </p>
         )}
-        {post?.edited && (
+        {post.edited && (
           <p>
             <span className="font-semibold">Edited:</span> {post.edited}
           </p>
         )}
       </div>
 
-      {/* Post content */}
-      {Array.isArray(post?.content) ? (
+      {Array.isArray(post.content) ? (
         post.content.map((block, index) => {
           switch (block.type) {
             case "h1":
@@ -139,10 +191,7 @@ export default function Post() {
             case "code":
               return (
                 <figure key={index} className="my-6 text-center pb-[3rem]">
-                  <CodeBlock
-                    key={index}
-                    code={block.content || "No code provided"}
-                  />
+                  <CodeBlock code={block.content || "No code provided"} />
                 </figure>
               );
             default:
@@ -150,10 +199,9 @@ export default function Post() {
           }
         })
       ) : (
-        <p className="text-lg leading-relaxed">{post?.content || ""}</p>
+        <p className="text-lg leading-relaxed">{post.content || ""}</p>
       )}
 
-      {/* Render pinned posts */}
       <div className="mt-10 pt-[3rem]">
         <h2 className="text-3xl font-bold mb-4">Pinned Posts</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -173,7 +221,6 @@ export default function Post() {
         </div>
       </div>
 
-      {/* Render other posts */}
       <div className="mt-10">
         <h2 className="text-3xl font-bold mb-4">Other Posts</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -193,7 +240,6 @@ export default function Post() {
         </div>
       </div>
 
-      {/* Back to the top button */}
       <div className="text-center mt-10">
         <button
           onClick={scrollToTop}

@@ -1,4 +1,34 @@
-export const posts = [
+import { MongoClient } from "mongodb";
+import dotenv from "dotenv";
+
+// Load environment variables from .env file
+dotenv.config();
+
+// Define the structure of a content block
+interface ContentBlock {
+  type: "p" | "h1" | "h2" | "code" | "image"; // Supported block types
+  content?: string; // Text content for paragraphs, headers, and code
+  src?: string; // Source URL for images
+  alt?: string; // Alternative text for images
+  caption?: string; // Caption for images
+}
+
+// Define the structure of a blog post
+interface BlogPost {
+  id: string;
+  title: string;
+  author?: string;
+  tags?: string;
+  summary: string;
+  content: ContentBlock[] | string; // Allow content to be either a string or an array of ContentBlock
+  pinned?: boolean;
+  new?: boolean;
+  date?: string;
+  edited?: string;
+}
+
+// Array of posts to seed
+const posts: BlogPost[] = [
   {
     id: "1",
     title: "My Firewall Labs",
@@ -578,4 +608,42 @@ Also, I made sure that the IPv4 upstream gateway was selected correctly, because
     content:
       "The top cyber threats in 2025 include ransomware attacks, phishing scams, zero-day exploits, insider threats, and supply chain attacks. Understanding these threats and implementing effective defenses is crucial to staying safe in the digital age.",
   },
+
+  // Add more posts if needed
 ];
+
+// MongoDB connection and seeding logic
+async function seedDatabase() {
+  const uri = process.env.MONGODB_URI; // Retrieve MongoDB URI from .env
+  if (!uri) {
+    console.error("MongoDB URI is not defined in the environment variables.");
+    return;
+  }
+
+  const client = new MongoClient(uri);
+
+  try {
+    console.log("Connecting to MongoDB...");
+    await client.connect();
+    const db = client.db("cyberblog");
+    const collection = db.collection("posts");
+
+    // Clear existing data (optional)
+    console.log("Clearing existing data...");
+    await collection.deleteMany({});
+    console.log("Existing data cleared.");
+
+    // Insert new data
+    console.log("Seeding new data...");
+    await collection.insertMany(posts);
+    console.log("Data seeded successfully!");
+  } catch (error) {
+    console.error("Error seeding data:", error);
+  } finally {
+    await client.close();
+    console.log("Connection closed.");
+  }
+}
+
+// Execute the seeding function
+seedDatabase();

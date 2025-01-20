@@ -1,49 +1,79 @@
-import { useState } from "react";
-import { posts } from "@/data/posts";
+import { useState, useEffect } from "react";
 import BlogCard from "@/components/BlogCard";
 
+// Define the structure of a content block
+interface ContentBlock {
+  type: "p" | "h1" | "h2" | "code" | "image";
+  content?: string;
+  src?: string;
+  alt?: string;
+  caption?: string;
+}
+
+// Define the structure of a blog post
+interface BlogPost {
+  id: string;
+  title: string;
+  author: string;
+  tags?: string;
+  summary: string;
+  content: ContentBlock[];
+  pinned?: boolean;
+  new?: boolean;
+  edited?: string;
+  date?: string;
+}
+
 export default function Blog() {
+  const [posts, setPosts] = useState<BlogPost[]>([]); // Explicitly typed state for fetched posts
   const [visiblePosts, setVisiblePosts] = useState(8); // Default total visible posts
   const [sortOption, setSortOption] = useState("new"); // Default sort option is "new"
+  const [loading, setLoading] = useState(true); // Loading state
+
+  // Fetch posts from the API
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const res = await fetch("/api/posts");
+        if (!res.ok) throw new Error("Failed to fetch posts");
+        const data = await res.json();
+        setPosts(data); // Update state with fetched posts
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPosts();
+  }, []);
 
   // Function to sort posts based on the selected option
   const sortedPosts = [...posts].sort((a, b) => {
-    // Apply date sorting independently, ignoring pinned
     if (sortOption === "date") {
       const dateA = a.date ? new Date(a.date).getTime() : 0;
       const dateB = b.date ? new Date(b.date).getTime() : 0;
       return dateB - dateA;
     }
 
-    // Always prioritize pinned posts for other cases
-    if (a.pinned && !b.pinned) return -1; // a is pinned, b is not
-    if (!a.pinned && b.pinned) return 1; // b is pinned, a is not
+    if (a.pinned && !b.pinned) return -1;
+    if (!a.pinned && b.pinned) return 1;
 
-    // Apply additional sorting based on the selected option
-    switch (sortOption) {
-      case "new":
-        // Sort by 'new' (true first), then by date (most recent first)
-        if (b.new !== a.new) return (b.new ? 1 : 0) - (a.new ? 1 : 0);
-        const dateA = a.date ? new Date(a.date).getTime() : 0;
-        const dateB = b.date ? new Date(b.date).getTime() : 0;
-        return dateB - dateA;
-      default:
-        // Default behavior (no further sorting, maintain relative order)
-        return 0;
+    if (sortOption === "new") {
+      if (b.new !== a.new) return (b.new ? 1 : 0) - (a.new ? 1 : 0);
+      const dateA = a.date ? new Date(a.date).getTime() : 0;
+      const dateB = b.date ? new Date(b.date).getTime() : 0;
+      return dateB - dateA;
     }
+
+    return 0;
   });
 
   // Function to load more posts
-  const loadMorePosts = () => {
-    setVisiblePosts((prev) => prev + 8);
-  };
+  const loadMorePosts = () => setVisiblePosts((prev) => prev + 8);
 
   // Function to scroll back to the top
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -61,7 +91,6 @@ export default function Blog() {
         <span className="font-bold">New</span> posts are also recommended by me.
       </p>
       <div className="w-full max-w-4xl mb-4 flex justify-end">
-        {/* Sort By Dropdown */}
         <select
           value={sortOption}
           onChange={(e) => setSortOption(e.target.value)}
@@ -71,24 +100,29 @@ export default function Blog() {
           <option value="date">Sort by Date</option>
         </select>
       </div>
-      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-4xl">
-        {/* Render Sorted Posts */}
-        {sortedPosts.slice(0, visiblePosts).map((post) => (
-          <BlogCard
-            key={post.id}
-            id={post.id}
-            title={post.title}
-            tags={post.tags}
-            date={post.date}
-            summary={post.summary}
-            author={post.author}
-            new={post.new}
-            pinned={post.pinned}
-          />
-        ))}
-      </div>
-      {/* Load more button */}
-      {visiblePosts < posts.length ? (
+      {loading ? (
+        <p className="text-lg">Loading posts...</p>
+      ) : posts.length === 0 ? (
+        <p className="text-lg">No posts available.</p>
+      ) : (
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-4xl">
+          {sortedPosts.slice(0, visiblePosts).map((post) => (
+            <BlogCard
+              key={post.id}
+              id={post.id}
+              title={post.title}
+              tags={post.tags}
+              date={post.date}
+              summary={post.summary}
+              author={post.author}
+              new={post.new}
+              pinned={post.pinned}
+            />
+          ))}
+        </div>
+      )}
+
+      {visiblePosts < posts.length && !loading ? (
         <div className="mt-10">
           <button
             onClick={loadMorePosts}
@@ -98,7 +132,6 @@ export default function Blog() {
           </button>
         </div>
       ) : (
-        /* Back to the Top Button */
         <div className="mt-10">
           <button
             onClick={scrollToTop}
