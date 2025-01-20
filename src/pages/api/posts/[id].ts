@@ -43,7 +43,7 @@ export default async function handler(
     res.status(200).json({
       id: post._id.toString(),
       title: post.title || "Untitled",
-      author: post.author || "Anonymous",
+      author: post.author || "Unknown",
       tags: post.tags || "",
       summary: post.summary || "",
       content: post.content || [],

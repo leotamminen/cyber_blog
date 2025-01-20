@@ -110,7 +110,14 @@ export default function Post() {
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <PostLayout>
+        <div className="flex items-center justify-center min-h-screen w-full">
+          {/* Spinner */}
+          <div className="loader"></div>
+        </div>
+      </PostLayout>
+    );
   }
 
   if (!post) {

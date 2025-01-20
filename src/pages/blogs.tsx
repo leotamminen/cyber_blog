@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import BlogCard from "@/components/BlogCard";
+import "../styles/globals.css";
 
 // Define the structure of a content block
 interface ContentBlock {
@@ -77,70 +78,91 @@ export default function Blog() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen w-full px-4 bg-gradient-to-r from-blue-800 via-cyan-700 to-blue-500 text-white dark:from-gray-900 dark:via-black dark:to-blue-900 dark:text-gray-200 pt-[5rem] pb-[7rem]">
-      <h1 className="text-4xl font-extrabold mb-6 text-center pb-[1rem]">
-        Breaking the Firewall Blog
-      </h1>
-      <p className="text-center text-lg max-w-3xl leading-relaxed pb-[2rem]">
-        Welcome to <span className="font-bold">Breaking the Firewall Blog</span>
-        , my personal <span className="font-bold">cybersecurity</span> learning
-        blog.
-        <br />
-        <span className="font-bold">Pinned</span> posts are notable and I would
-        suggest taking a look at them first.{" "}
-        <span className="font-bold">New</span> posts are also recommended by me.
-      </p>
-      <div className="w-full max-w-4xl mb-4 flex justify-end">
-        <select
-          value={sortOption}
-          onChange={(e) => setSortOption(e.target.value)}
-          className="bg-gray-200 text-gray-800 rounded-lg py-2 px-4 dark:bg-gray-700 dark:text-white"
-        >
-          <option value="new">Sort by Featured</option>
-          <option value="date">Sort by Date</option>
-        </select>
+    <div className="flex flex-col items-center justify-start min-h-screen w-full px-4 bg-gradient-to-r from-blue-800 via-cyan-700 to-blue-500 text-white dark:from-gray-900 dark:via-black dark:to-blue-900 dark:text-gray-200 pt-[7rem] pb-[7rem]">
+      {/* Header Section */}
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-extrabold mb-4">
+          Breaking the Firewall Blog
+        </h1>
+        <p className="text-lg max-w-3xl mx-auto leading-relaxed">
+          Welcome to{" "}
+          <span className="font-bold">Breaking the Firewall Blog</span>, my
+          personal <span className="font-bold">cybersecurity</span> learning
+          blog.
+          <br />
+          <span className="font-bold">Pinned</span> posts are notable and I
+          would suggest taking a look at them first.{" "}
+          <span className="font-bold">New</span> posts are also recommended by
+          me.
+        </p>
       </div>
-      {loading ? (
-        <p className="text-lg">Loading posts...</p>
-      ) : posts.length === 0 ? (
-        <p className="text-lg">No posts available.</p>
-      ) : (
-        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-4xl">
-          {sortedPosts.slice(0, visiblePosts).map((post) => (
-            <BlogCard
-              key={post.id}
-              id={post.id}
-              title={post.title}
-              tags={post.tags}
-              date={post.date}
-              summary={post.summary}
-              author={post.author}
-              new={post.new}
-              pinned={post.pinned}
-            />
-          ))}
-        </div>
-      )}
 
-      {visiblePosts < posts.length && !loading ? (
-        <div className="mt-10">
-          <button
-            onClick={loadMorePosts}
-            className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-600 hover:to-cyan-600 dark:from-gray-700 dark:to-gray-600 dark:hover:from-gray-600 dark:hover:to-gray-500 transition duration-300"
+      {/* Dropdown Menu */}
+      <div
+        className="w-full max-w-4xl mb-6 flex justify-end"
+        style={{ minHeight: "48px" }} // Ensures consistent height
+      >
+        {!loading && (
+          <select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+            className="bg-gray-200 text-gray-800 rounded-lg py-2 px-4 dark:bg-gray-700 dark:text-white"
           >
-            Load more
-          </button>
-        </div>
-      ) : (
-        <div className="mt-10">
-          <button
-            onClick={scrollToTop}
-            className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-600 hover:to-cyan-600 dark:from-gray-700 dark:to-gray-600 dark:hover:from-gray-600 dark:hover:to-gray-500 transition duration-300"
-          >
-            Back to the top
-          </button>
-        </div>
-      )}
+            <option value="new">Sort by Featured</option>
+            <option value="date">Sort by Date</option>
+          </select>
+        )}
+      </div>
+
+      {/* Dynamic Content Section */}
+      <div className="flex flex-col items-center w-full max-w-4xl">
+        {loading ? (
+          <div className="flex items-center justify-center w-full py-10">
+            <div className="loader"></div>
+          </div>
+        ) : posts.length === 0 ? (
+          <p className="text-lg">No posts available.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+            {sortedPosts.slice(0, visiblePosts).map((post) => (
+              <BlogCard
+                key={post.id}
+                id={post.id}
+                title={post.title}
+                tags={post.tags}
+                date={post.date}
+                summary={post.summary}
+                author={post.author}
+                new={post.new}
+                pinned={post.pinned}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Buttons Section */}
+        {!loading && visiblePosts < posts.length ? (
+          <div className="mt-10">
+            <button
+              onClick={loadMorePosts}
+              className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-600 hover:to-cyan-600 dark:from-gray-700 dark:to-gray-600 dark:hover:from-gray-600 dark:hover:to-gray-500 transition duration-300"
+            >
+              Load more
+            </button>
+          </div>
+        ) : (
+          !loading && (
+            <div className="mt-10">
+              <button
+                onClick={scrollToTop}
+                className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-600 hover:to-cyan-600 dark:from-gray-700 dark:to-gray-600 dark:hover:from-gray-600 dark:hover:to-gray-500 transition duration-300"
+              >
+                Back to the top
+              </button>
+            </div>
+          )
+        )}
+      </div>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import BlogCard from "@/components/BlogCard";
+import "../styles/globals.css";
 
 interface BlogPost {
   id: string;
@@ -96,10 +97,10 @@ export default function Index() {
           className="rounded-lg shadow-md"
         />
       </div>
+
+      {/* Blog Posts Section */}
       <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-4xl">
-        {loading ? (
-          <p>Loading posts...</p>
-        ) : (
+        {!loading &&
           sortedPosts
             .slice(0, visiblePosts)
             .map((post) => (
@@ -114,26 +115,37 @@ export default function Index() {
                 new={post.new}
                 pinned={post.pinned}
               />
-            ))
-        )}
+            ))}
       </div>
-      <div className="mt-10">
-        {visiblePosts < sortedPosts.length ? (
-          <button
-            onClick={loadMorePosts}
-            className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-600 hover:to-cyan-600 dark:from-gray-700 dark:to-gray-600 dark:hover:from-gray-600 dark:hover:to-gray-500 transition duration-300"
-          >
-            Load more
-          </button>
-        ) : (
-          <button
-            onClick={scrollToTop}
-            className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-600 hover:to-cyan-600 dark:from-gray-700 dark:to-gray-600 dark:hover:from-gray-600 dark:hover:to-gray-500 transition duration-300"
-          >
-            Back to the top
-          </button>
-        )}
-      </div>
+
+      {/* Loader Section Below Blog Posts */}
+      {loading && (
+        <div className="flex items-center justify-center mt-10">
+          {/* Spinner */}
+          <div className="loader"></div>
+        </div>
+      )}
+
+      {/* Buttons Section */}
+      {!loading && (
+        <div className="mt-10">
+          {visiblePosts < sortedPosts.length ? (
+            <button
+              onClick={loadMorePosts}
+              className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-600 hover:to-cyan-600 dark:from-gray-700 dark:to-gray-600 dark:hover:from-gray-600 dark:hover:to-gray-500 transition duration-300"
+            >
+              Load more
+            </button>
+          ) : (
+            <button
+              onClick={scrollToTop}
+              className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-600 hover:to-cyan-600 dark:from-gray-700 dark:to-gray-600 dark:hover:from-gray-600 dark:hover:to-gray-500 transition duration-300"
+            >
+              Back to the top
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }
