@@ -229,7 +229,7 @@ export default function Post() {
       </div>
 
       <div className="mt-10">
-        <h2 className="text-3xl font-bold mb-4">Other Posts</h2>
+        <h2 className="text-3xl font-bold mb-4">More Posts</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {otherPosts.map((otherPost) => (
             <BlogCard

@@ -14,7 +14,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { id } = req.query;
+  const { id, pinned } = req.query; // Include `pinned` in query parameters
 
   if (req.method !== "GET") {
     res.status(405).json({ error: "Method not allowed" });
@@ -58,7 +58,17 @@ export default async function handler(
         return;
       }
     } else {
-      const posts = await collection.find().toArray();
+      let query = {}; // Default query fetches all posts
+      if (pinned !== undefined) {
+        const isPinned = pinned === "true";
+        if (isPinned) {
+          query = { pinned: true };
+        } else {
+          query = { $or: [{ pinned: false }, { pinned: { $exists: false } }] }; // Include missing `pinned`
+        }
+      }
+
+      const posts = await collection.find(query).toArray();
       const sanitizedPosts = posts.map((post) => ({
         id: post._id.toString(),
         title: post.title || "Untitled",
