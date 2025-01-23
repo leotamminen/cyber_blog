@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import BlogCard from "@/components/BlogCard";
 import "../styles/globals.css";
 
-// Define the structure of a content block
+// For defining the structure of a content block
 interface ContentBlock {
   type: "p" | "h1" | "h2" | "code" | "image";
   content?: string;
@@ -11,7 +11,7 @@ interface ContentBlock {
   caption?: string;
 }
 
-// Define the structure of a blog post
+// Structure of a blog post
 interface BlogPost {
   id: string;
   title: string;
@@ -25,19 +25,21 @@ interface BlogPost {
   date?: string;
 }
 
+// Fetched posts, visible posts and loading, should be refactored to own components for cleaner code.
 export default function Blog() {
   const [posts, setPosts] = useState<BlogPost[]>([]); // Explicitly typed state for fetched posts
   const [visiblePosts, setVisiblePosts] = useState(8); // Default total visible posts
   const [sortOption, setSortOption] = useState("new"); // Default sort option is "new"
   const [loading, setLoading] = useState(true); // Loading state
 
-  // Fetch posts from the API
+  // Fetch the blog posts from API
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const res = await fetch("/api/posts");
         if (!res.ok) throw new Error("Failed to fetch posts");
         const data = await res.json();
+        
         setPosts(data); // Update state with fetched posts
       } catch (error) {
         console.error("Error fetching posts:", error);
