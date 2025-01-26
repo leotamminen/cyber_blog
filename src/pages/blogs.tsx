@@ -39,7 +39,7 @@ export default function Blog() {
         const res = await fetch("/api/posts");
         if (!res.ok) throw new Error("Failed to fetch posts");
         const data = await res.json();
-        
+
         setPosts(data); // Update state with fetched posts
       } catch (error) {
         console.error("Error fetching posts:", error);
