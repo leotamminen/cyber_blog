@@ -1,27 +1,7 @@
 import { useState, useEffect } from "react";
 import BlogCard from "@/components/BlogCard";
 import "../styles/globals.css";
-
-interface ContentBlock {
-  type: "p" | "h1" | "h2" | "code" | "image";
-  content?: string;
-  src?: string;
-  alt?: string;
-  caption?: string;
-}
-
-interface BlogPost {
-  id: string;
-  title: string;
-  author: string;
-  tags?: string;
-  summary: string;
-  content: ContentBlock[];
-  pinned?: boolean;
-  new?: boolean;
-  edited?: string;
-  date?: string;
-}
+import { BlogPost } from "@/types/types";
 
 export default function Blog() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
