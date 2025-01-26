@@ -85,7 +85,9 @@ export default async function handler(
     }
   } catch (err) {
     console.error("Error in API handler:", err);
-    res.status(500).json({ error: "Failed to fetch posts" });
+    res.status(500).json({
+      error: "Posts are currently unavailable. Please try again later.",
+    });
   } finally {
     await client.close();
   }

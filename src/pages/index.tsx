@@ -2,44 +2,45 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import BlogCard from "@/components/BlogCard";
+import { BlogPost } from "@/types/types";
 import "../styles/globals.css";
 
-interface BlogPost {
-  id: string;
-  title: string;
-  author: string;
-  tags?: string;
-  summary: string;
-  content: Array<{
-    type: string;
-    content?: string;
-    src?: string;
-    alt?: string;
-    caption?: string;
-  }>;
-  pinned?: boolean;
-  new?: boolean;
-  date?: string;
-}
-
 export default function Index() {
-  const [posts, setPosts] = useState<BlogPost[]>([]); // State to store posts
-  const [visiblePosts, setVisiblePosts] = useState(4); // Initially show 4 posts
-  const [loading, setLoading] = useState(true); // Loading state
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [visiblePosts, setVisiblePosts] = useState(4);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Fetch posts from the API
+  // Fetch blog posts when the page loads
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        // Make a request to the API to get posts
         const response = await fetch("/api/posts");
         if (!response.ok) {
-          throw new Error("Failed to fetch posts");
+          // Throw a fancy error message if the API request fails (added contact support).
+          throw new Error(
+            "Could not load blog posts from the database. Please try again later. If this error persists, contact support."
+          );
         }
+        // Convert the response to JSON and save the posts
         const data = await response.json();
-        setPosts(data); // Update posts state
-      } catch (error) {
-        console.error("Error fetching posts:", error);
+        setPosts(data);
+      } catch (error: unknown) {
+        // Handle any errors that occur during the fetch
+        if (error instanceof Error) {
+          console.error("Error fetching posts:", error.message);
+          // Set a detailed error message with a link
+          setError(
+            "Could not load blog posts from the database. Please try again later. If this error persists, contact " +
+              '<a href="/support" class="underline text-blue-500 hover:text-blue-700">support</a>.'
+          );
+        } else {
+          console.error("An unexpected error occurred:", error);
+          setError("An unexpected error occurred.");
+        }
       } finally {
+        // Set loading to false whether the request succeeded or failed
         setLoading(false);
       }
     };
@@ -47,7 +48,7 @@ export default function Index() {
     fetchPosts();
   }, []);
 
-  // Sort posts: Pinned first, then "new", then by date (most recent first)
+  // Sort posts: pinned first, then new posts, then by date (newest first)
   const sortedPosts = [...posts].sort((a, b) => {
     if (b.pinned !== a.pinned) return (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0);
     if (b.new !== a.new) return (b.new ? 1 : 0) - (a.new ? 1 : 0);
@@ -56,20 +57,23 @@ export default function Index() {
     return dateB - dateA;
   });
 
+  // Show 4 more posts when "Load more" is clicked
   const loadMorePosts = () => {
     setVisiblePosts((prev) => Math.min(prev + 4, sortedPosts.length));
   };
 
+  // Scroll back to the top of the page when the button is clicked
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen w-full px-4 bg-gradient-to-r from-blue-800 via-cyan-700 to-purple-900 text-white dark:from-gray-900 dark:via-black dark:to-purple-800 dark:text-gray-200 pt-[7rem] pb-[10rem]">
-      <h1 className="text-4xl font-extrabold mb-6 text-center">
-        Welcome to my Cybersecurity Blog
-      </h1>
-      <p className="text-center text-lg max-w-2xl">
+    <div className="general-container general-container-pt general-container-pb">
+      {/* Page title */}
+      <h1 className="general-title">Welcome to my Cybersecurity Blog</h1>
+
+      {/* Introduction */}
+      <p className="general-text max-width">
         Breaking the Firewall is my personal blog where I update my journey
         learning cybersecurity. I created the site with Next.js and TypeScript.
         The real focus is on the blog posts, where I used most of my effort. I
@@ -80,14 +84,13 @@ export default function Index() {
         <br />
         Below are the featured and newest blog posts where I recommend taking a
         look first. All blogs can be found{" "}
-        <Link
-          href="/blogs"
-          className="underline text-blue-300 hover:text-blue-500"
-        >
+        <Link href="/blogs" className="general-link">
           here
         </Link>
         .
       </p>
+
+      {/* AI generated Breaking the firewall logo */}
       <div className="my-6">
         <Image
           src="/logo2.png"
@@ -98,49 +101,53 @@ export default function Index() {
         />
       </div>
 
-      {/* Blog Posts Section */}
-      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-4xl">
-        {!loading &&
-          sortedPosts
-            .slice(0, visiblePosts)
-            .map((post) => (
-              <BlogCard
-                key={post.id}
-                id={post.id}
-                title={post.title}
-                tags={post.tags}
-                date={post.date}
-                summary={post.summary}
-                author={post.author}
-                new={post.new}
-                pinned={post.pinned}
-              />
-            ))}
-      </div>
+      {/* Show blog posts if not loading and no error */}
+      {!loading && !error && (
+        <div className="grid-layout">
+          {sortedPosts.slice(0, visiblePosts).map((post) => (
+            <BlogCard
+              key={post.id}
+              id={post.id}
+              title={post.title}
+              tags={post.tags}
+              date={post.date}
+              summary={post.summary}
+              author={post.author}
+              new={post.new}
+              pinned={post.pinned}
+            />
+          ))}
+        </div>
+      )}
 
-      {/* Loader Section Below Blog Posts */}
+      {/* Show loader if data is still loading */}
       {loading && (
-        <div className="flex items-center justify-center mt-10">
-          {/* Spinner */}
+        <div className="general-loader-wrapper">
           <div className="loader"></div>
         </div>
       )}
 
-      {/* Buttons Section */}
-      {!loading && (
-        <div className="mt-10">
+      {/* Show error message if there's an error */}
+      {!loading && error && (
+        <div className="general-loader-wrapper">
+          <p
+            className="text-red-500"
+            dangerouslySetInnerHTML={{ __html: error }}
+          ></p>
+        </div>
+      )}
+
+      {/* Show buttons if not loading and no error */}
+      {!loading && !error && (
+        <div className="general-button-wrapper">
           {visiblePosts < sortedPosts.length ? (
-            <button
-              onClick={loadMorePosts}
-              className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-600 hover:to-cyan-600 dark:from-gray-700 dark:to-gray-600 dark:hover:from-gray-600 dark:hover:to-gray-500 transition duration-300"
-            >
+            // Button to load more posts
+            <button onClick={loadMorePosts} className="general-button">
               Load more
             </button>
           ) : (
-            <button
-              onClick={scrollToTop}
-              className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-600 hover:to-cyan-600 dark:from-gray-700 dark:to-gray-600 dark:hover:from-gray-600 dark:hover:to-gray-500 transition duration-300"
-            >
+            // Button to scroll back to the top
+            <button onClick={scrollToTop} className="general-button">
               Back to the top
             </button>
           )}
