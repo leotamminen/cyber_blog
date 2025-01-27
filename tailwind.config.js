@@ -10,10 +10,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Extend color palette
-        darkBackground: "#1a202c",
+        // Colors for light mode
+        lightGradientStart: "#1e3a8a", // Blue 800
+        lightGradientMid: "#0891b2", // Cyan 700
+        lightGradientEnd: "#2563eb", // Blue 500
+        // Colors for dark mode
+        darkGradientStart: "#111827", // Gray 900
+        darkGradientMid: "#000000", // Black
+        darkGradientEnd: "#1e40af", // Blue 900
+        // General text colors
         darkText: "#a0aec0",
-        lightBackground: "#f7fafc",
         lightText: "#2d3748",
       },
     },
