@@ -64,55 +64,47 @@ export default function Post() {
   const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
-    if (!router.isReady || !id) return; // Ensure the router is ready before fetching
+    const { isReady } = router; // Destructure the specific properties from router
+
+    if (!isReady || !id || typeof id !== "string") {
+      console.error("Invalid or missing ID:", id);
+      return;
+    }
 
     const fetchPost = async () => {
       try {
         setLoading(true);
 
         const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "";
-        console.log(baseURL);
+        const [postResponse, pinnedResponse, otherResponse] = await Promise.all(
+          [
+            fetch(`${baseURL}/api/posts/${id}`),
+            fetch(`${baseURL}/api/posts?pinned=true`),
+            fetch(`${baseURL}/api/posts?pinned=false`),
+          ]
+        );
 
-        const fetchWithValidation = async (url: string) => {
-          try {
-            const response = await fetch(url);
-            if (!response.ok) {
-              console.error(`Error fetching ${url}:`, response.statusText);
-              return null; // Return null if the request fails
-            }
-            return await response.json();
-          } catch (error) {
-            console.error(`Network error while fetching ${url}:`, error);
-            return null; // Return null if there's a network error
-          }
-        };
-
-        const [postData, pinnedData, otherData] = await Promise.all([
-          fetchWithValidation(`${baseURL}/api/posts/${id}`), // Fetch the specific post
-          fetchWithValidation(`${baseURL}/api/posts?pinned=true`), // Fetch pinned posts
-          fetchWithValidation(`${baseURL}/api/posts?pinned=false`), // Fetch other posts
-        ]);
-
-        if (!postData) {
-          console.error("Post data not found.");
-          redirectTo404(router); // Redirect to 404 if the post is not found
-          return;
+        if (!postResponse.ok) {
+          throw new Error("Failed to fetch the post");
         }
 
+        const postData = await postResponse.json();
+        const pinnedData = pinnedResponse.ok ? await pinnedResponse.json() : [];
+        const otherData = otherResponse.ok ? await otherResponse.json() : [];
+
         setPost(postData);
-        setPinnedPosts((pinnedData || []).slice(0, 4)); // Limit pinned posts to 4
-        setOtherPosts((otherData || []).slice(0, 4)); // Limit other posts to 4
+        setPinnedPosts((pinnedData || []).slice(0, 4));
+        setOtherPosts((otherData || []).slice(0, 4));
       } catch (error) {
-        console.error("Unexpected error fetching post data:", error);
-        redirectTo404(router); // Redirect to 404 if any unexpected error occurs
+        console.error("Error fetching post data:", error);
+        redirectTo404(router);
       } finally {
         setLoading(false);
       }
     };
 
-    console.log("Fetching post with ID:", id); // Debugging log
     fetchPost();
-  }, [id, router.isReady]); // Add `router.isReady` as a dependency
+  }, [id, router]); // Include `router` here
 
   // Function to scroll back to the top
   const scrollToTop = () => {

@@ -62,7 +62,11 @@ export default function Index() {
 
   // Show 4 more posts when "Load more" is clicked
   const loadMorePosts = () => {
-    setVisiblePosts((prev) => Math.min(prev + 4, sortedPosts.length));
+    try {
+      setVisiblePosts((prev) => Math.min(prev + 4, sortedPosts.length));
+    } catch (error) {
+      console.error("Error while loading more posts:", error);
+    }
   };
 
   // Scroll back to the top of the page when the button is clicked
@@ -109,15 +113,15 @@ export default function Index() {
         <div className="grid-layout">
           {sortedPosts.slice(0, visiblePosts).map((post) => (
             <BlogCard
-              key={post.id}
-              id={post.id}
-              title={post.title}
-              tags={post.tags}
-              date={post.date}
-              summary={post.summary}
-              author={post.author}
-              new={post.new}
-              pinned={post.pinned}
+              key={post.id || "unknown"}
+              id={post.id || "unknown"}
+              title={post.title || "Untitled"}
+              tags={post.tags || ""}
+              date={post.date || "N/A"}
+              summary={post.summary || "No summary available"}
+              author={post.author || "Unknown"}
+              new={!!post.new}
+              pinned={!!post.pinned}
             />
           ))}
         </div>
