@@ -1,24 +1,20 @@
-import type { NextConfig } from "next";
-import type { Configuration } from "webpack";
-
-const nextConfig: NextConfig = {
-  webpack: (config: Configuration, { isServer }: { isServer: boolean }) => {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  webpack: (config, { isServer }) => {
     if (!isServer) {
-      // Ensure resolve and fallback exist before modifying them
       config.resolve = {
         ...(config.resolve || {}),
         fallback: {
           ...(config.resolve?.fallback || {}),
-          fs: false, // File system module
-          net: false, // Network module
-          tls: false, // TLS/SSL module
-          dns: false, // DNS module
-          child_process: false, // Spawn processes module
-          "fs/promises": false, // Promises version of fs
+          fs: false,
+          net: false,
+          tls: false,
+          dns: false,
+          child_process: false,
+          "fs/promises": false,
         },
       };
     } else {
-      // Correctly handle externals for the server-side
       if (typeof config.externals === "undefined") {
         config.externals = [];
       }
@@ -43,4 +39,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
