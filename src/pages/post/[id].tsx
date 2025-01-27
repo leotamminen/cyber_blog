@@ -6,7 +6,7 @@ import PostLayout from "@/layouts/PostLayout"; // Import the reusable PostLayout
 import Image from "next/image";
 import BlogCard from "@/components/BlogCard";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { dark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 // Dynamic custom styles for CodeBlock
 const customCodeBlockStyles: React.CSSProperties = {
