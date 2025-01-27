@@ -53,8 +53,18 @@ export default async function handler(
       edited: post.edited || null,
     });
   } catch (err) {
-    console.error("Error fetching post:", err);
-    res.status(500).json({ error: "Failed to fetch post" });
+    if (
+      err instanceof Error &&
+      err.message.includes(
+        "Argument passed in must be a single String of 12 bytes or a string of 24 hex characters"
+      )
+    ) {
+      console.error("Invalid ObjectId:", id);
+      res.status(400).json({ error: "Invalid ID format" });
+    } else {
+      console.error("Error fetching post:", err);
+      res.status(500).json({ error: "Failed to fetch post" });
+    }
   } finally {
     await client.close();
   }

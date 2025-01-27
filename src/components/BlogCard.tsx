@@ -21,19 +21,23 @@ export default function BlogCard({
   new: isNew = false, // Default to false if not provided
   pinned = false, // Default to false if not provided
 }: BlogCardProps) {
-  // Format the date in "Published 10 January 2025" format
-  const formattedDate = date
-    ? `Published ${new Intl.DateTimeFormat("en-GB", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      }).format(new Date(date))}`
-    : "Unknown Date";
+  // Format the date safely
+  const formattedDate =
+    date && !isNaN(new Date(date).getTime())
+      ? `Published ${new Intl.DateTimeFormat("en-GB", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        }).format(new Date(date))}`
+      : "Unknown Date";
 
   // Safely format tags
-  const formattedTags = Array.isArray(tags)
-    ? tags.join(", ")
-    : tags || "No Tags";
+  const formattedTags =
+    Array.isArray(tags) && tags.length > 0
+      ? tags.join(", ")
+      : typeof tags === "string" && tags.trim()
+      ? tags
+      : "No Tags";
 
   return (
     <div className="relative h-full group transition-transform transform hover:scale-105 hover:-translate-y-1 hover:shadow-2xl duration-300 ease-out">
