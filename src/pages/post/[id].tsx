@@ -66,33 +66,49 @@ export default function Post() {
   useEffect(() => {
     if (!id) return;
 
-    // Fetch post data
     const fetchPost = async () => {
       try {
         setLoading(true);
 
-        const [postResponse, pinnedResponse, otherResponse] = await Promise.all(
-          [
-            fetch(`/api/posts/${id}`), // Fetch the specific post
-            fetch(`/api/posts?pinned=true`), // Fetch pinned posts
-            fetch(`/api/posts?pinned=false`), // Fetch other posts
-          ]
-        );
+        // Base URL from environment variable
+        const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "";
 
-        if (!postResponse.ok) {
-          throw new Error("Post not found");
+        // Helper function for fetch with error handling
+        const fetchWithValidation = async (url: string) => {
+          try {
+            const response = await fetch(url);
+            if (!response.ok) {
+              console.error(`Error fetching ${url}:`, response.statusText);
+              return null; // Return null if the request fails
+            }
+            return await response.json();
+          } catch (error) {
+            console.error(`Network error while fetching ${url}:`, error);
+            return null; // Return null if there's a network error
+          }
+        };
+
+        // Perform all fetches in parallel
+        const [postData, pinnedData, otherData] = await Promise.all([
+          fetchWithValidation(`${baseURL}/api/posts/${id}`), // Fetch the specific post
+          fetchWithValidation(`${baseURL}/api/posts?pinned=true`), // Fetch pinned posts
+          fetchWithValidation(`${baseURL}/api/posts?pinned=false`), // Fetch other posts
+        ]);
+
+        // Check if the main post is available
+        if (!postData) {
+          console.error("Post data not found.");
+          redirectTo404(router); // Redirect to 404 if the post is not found
+          return;
         }
 
-        const postData = await postResponse.json();
-        const pinnedData = await pinnedResponse.json();
-        const otherData = await otherResponse.json();
-
+        // Update state with fetched data
         setPost(postData);
-        setPinnedPosts(pinnedData.slice(0, 4)); // Limit pinned posts to 4
-        setOtherPosts(otherData.slice(0, 4)); // Limit other posts to 4
+        setPinnedPosts((pinnedData || []).slice(0, 4)); // Limit pinned posts to 4
+        setOtherPosts((otherData || []).slice(0, 4)); // Limit other posts to 4
       } catch (error) {
-        console.error("Error fetching post data:", error);
-        redirectTo404(router); // Redirect to 404 if the post is not found
+        console.error("Unexpected error fetching post data:", error);
+        redirectTo404(router); // Redirect to 404 if any unexpected error occurs
       } finally {
         setLoading(false);
       }
