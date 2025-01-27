@@ -12,9 +12,8 @@ export default function Blog() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts`
-        );
+        const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "";
+        const res = await fetch(`${baseURL}/api/posts`);
 
         if (!res.ok) throw new Error("Failed to fetch posts");
         const data = await res.json();
@@ -106,20 +105,30 @@ export default function Blog() {
           </div>
         )}
 
-        {!loading && visiblePosts < posts.length ? (
+        {!loading && visiblePosts < posts.length && (
           <div className="general-button-wrapper">
             <button onClick={loadMorePosts} className="general-button">
               Load more
             </button>
           </div>
-        ) : (
-          !loading && (
-            <div className="general-button-wrapper">
-              <button onClick={scrollToTop} className="general-button">
-                Back to the top
-              </button>
-            </div>
-          )
+        )}
+
+        {!loading && posts.length === 0 && (
+          <p className="general-description">No posts available.</p>
+        )}
+
+        {loading && (
+          <div className="general-loader-wrapper">
+            <div className="loader"></div>
+          </div>
+        )}
+
+        {!loading && visiblePosts >= posts.length && posts.length > 0 && (
+          <div className="general-button-wrapper">
+            <button onClick={scrollToTop} className="general-button">
+              Back to the top
+            </button>
+          </div>
         )}
       </div>
     </div>
