@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import MainLayout from "@/layouts/MainLayout";
 import { ThemeProvider } from "@/app/theme/ThemeContext";
+import "whatwg-fetch"; // Polyfills fetch API
 
 export default function App({ Component, pageProps, router }: AppProps) {
   const is404Page = router.pathname === "/404";

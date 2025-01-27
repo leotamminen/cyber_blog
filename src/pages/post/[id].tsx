@@ -76,11 +76,12 @@ export default function Post() {
         setLoading(true);
 
         const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "";
+
         const [postResponse, pinnedResponse, otherResponse] = await Promise.all(
           [
-            fetch(`${baseURL}/api/posts/${id}`),
-            fetch(`${baseURL}/api/posts?pinned=true`),
-            fetch(`${baseURL}/api/posts?pinned=false`),
+            fetch(`${baseURL}/api/posts/${id}`, { cache: "no-store" }),
+            fetch(`${baseURL}/api/posts?pinned=true`, { cache: "no-store" }),
+            fetch(`${baseURL}/api/posts?pinned=false`, { cache: "no-store" }),
           ]
         );
 
