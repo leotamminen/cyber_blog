@@ -8,6 +8,7 @@ export default function Blog() {
   const [visiblePosts, setVisiblePosts] = useState(8);
   const [sortOption, setSortOption] = useState("new");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -15,15 +16,20 @@ export default function Blog() {
         const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "";
         const res = await fetch(`${baseURL}/api/posts`);
 
-        if (!res.ok) throw new Error("Failed to fetch posts");
+        if (!res.ok) {
+          throw new Error(`Failed to fetch posts: ${res.statusText}`);
+        }
+
         const data = await res.json();
         setPosts(data);
-      } catch (error) {
+      } catch (error: unknown) {
         console.error("Error fetching posts:", error);
+        setError("Failed to load posts. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
+
     fetchPosts();
   }, []);
 
@@ -66,6 +72,8 @@ export default function Blog() {
           recommended by me.
         </p>
       </div>
+
+      {error && <p className="text-red-500">{error}</p>}
 
       <div className="general-dropdown-wrapper" style={{ minHeight: "48px" }}>
         {!loading && (
@@ -110,16 +118,6 @@ export default function Blog() {
             <button onClick={loadMorePosts} className="general-button">
               Load more
             </button>
-          </div>
-        )}
-
-        {!loading && posts.length === 0 && (
-          <p className="general-description">No posts available.</p>
-        )}
-
-        {loading && (
-          <div className="general-loader-wrapper">
-            <div className="loader"></div>
           </div>
         )}
 

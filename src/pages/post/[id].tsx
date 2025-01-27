@@ -64,16 +64,15 @@ export default function Post() {
   const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
-    if (!id) return;
+    if (!router.isReady || !id) return; // Ensure the router is ready before fetching
 
     const fetchPost = async () => {
       try {
         setLoading(true);
 
-        // Base URL from environment variable
         const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "";
+        console.log(baseURL);
 
-        // Helper function for fetch with error handling
         const fetchWithValidation = async (url: string) => {
           try {
             const response = await fetch(url);
@@ -88,21 +87,18 @@ export default function Post() {
           }
         };
 
-        // Perform all fetches in parallel
         const [postData, pinnedData, otherData] = await Promise.all([
           fetchWithValidation(`${baseURL}/api/posts/${id}`), // Fetch the specific post
           fetchWithValidation(`${baseURL}/api/posts?pinned=true`), // Fetch pinned posts
           fetchWithValidation(`${baseURL}/api/posts?pinned=false`), // Fetch other posts
         ]);
 
-        // Check if the main post is available
         if (!postData) {
           console.error("Post data not found.");
           redirectTo404(router); // Redirect to 404 if the post is not found
           return;
         }
 
-        // Update state with fetched data
         setPost(postData);
         setPinnedPosts((pinnedData || []).slice(0, 4)); // Limit pinned posts to 4
         setOtherPosts((otherData || []).slice(0, 4)); // Limit other posts to 4
@@ -114,8 +110,9 @@ export default function Post() {
       }
     };
 
+    console.log("Fetching post with ID:", id); // Debugging log
     fetchPost();
-  }, [id, router]);
+  }, [id, router.isReady]); // Add `router.isReady` as a dependency
 
   // Function to scroll back to the top
   const scrollToTop = () => {
