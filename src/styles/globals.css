@@ -152,9 +152,31 @@
 }
 
 .markdown-content a {
-  text-decoration: underline; /* Ensures all links are underlined */
+  text-decoration: underline; /* links are underlined */
 }
 
 .markdown-content a:hover {
-  text-decoration: none; /* Optional: Remove underline on hover */
+  text-decoration: none;
+}
+
+.markdown-content {
+  word-wrap: break-word;       /* for legacy browsers */
+  overflow-wrap: anywhere;     /* more aggressive than break-word */
+  word-break: break-all;        /* force break on long words */
+  hyphens: auto;               /* optional, for hyphenation */
+}
+
+.markdown-content * {
+  white-space: normal !important;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+}
+
+.markdown-content p,
+.markdown-content span,
+.markdown-content div {
+  white-space: normal !important;
+  word-break: normal;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
