@@ -150,3 +150,11 @@
 .grid-layout {
   @apply mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-4xl;
 }
+
+.markdown-content a {
+  text-decoration: underline; /* Ensures all links are underlined */
+}
+
+.markdown-content a:hover {
+  text-decoration: none; /* Optional: Remove underline on hover */
+}

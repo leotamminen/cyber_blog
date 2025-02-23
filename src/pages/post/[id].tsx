@@ -7,6 +7,11 @@ import Image from "next/image";
 import BlogCard from "@/components/BlogCard";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
+
+// [Click here](https://example.com) *italic* **bold**
 
 // Dynamic custom styles for CodeBlock
 const customCodeBlockStyles: React.CSSProperties = {
@@ -171,16 +176,17 @@ export default function Post() {
                   {block.content || ""}
                 </h2>
               );
-            case "p":
-              return (
-                <div key={index} className="text-lg leading-relaxed mb-4">
-                  {block.content?.split("\n").map((line, lineIndex) => (
-                    <p key={lineIndex} className="mb-5">
-                      {line.trim()}
-                    </p>
-                  ))}
-                </div>
-              );
+              case "p":
+                return (
+                  <div key={index} className="text-lg leading-relaxed mb-4 markdown-content">
+                    <ReactMarkdown 
+                      rehypePlugins={[rehypeRaw]}
+                      remarkPlugins={[remarkGfm]}
+                    >
+                      {block.content || ""}
+                    </ReactMarkdown>
+                  </div>
+                );
             case "image":
               return (
                 <figure
