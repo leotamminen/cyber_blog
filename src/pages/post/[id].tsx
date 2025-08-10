@@ -5,8 +5,8 @@ import { redirectTo404 } from "@/utils/navigation"; // Import the global redirec
 import PostLayout from "@/layouts/PostLayout"; // Import the reusable PostLayout component
 import Image from "next/image";
 import BlogCard from "@/components/BlogCard";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { dark } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import oneDark from 'react-syntax-highlighter/dist/esm/styles/prism/one-dark';
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
@@ -32,7 +32,7 @@ function CodeBlock({ code }: { code: string }) {
   return (
     <SyntaxHighlighter
       language="javascript"
-      style={dark}
+      style={oneDark}
       customStyle={customCodeBlockStyles}
     >
       {code}
