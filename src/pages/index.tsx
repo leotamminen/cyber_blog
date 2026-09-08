@@ -16,9 +16,7 @@ export default function Index() {
     const fetchPosts = async () => {
       try {
         // Make a request to the API to get posts
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/posts`
-        );
+        const response = await fetch("/api/posts");
 
         if (!response.ok) {
           // Throw a fancy error message if the API request fails (added contact support).

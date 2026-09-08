@@ -13,8 +13,7 @@ export default function Blog() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "";
-        const res = await fetch(`${baseURL}/api/posts`);
+        const res = await fetch("/api/posts");
 
         if (!res.ok) {
           throw new Error(`Failed to fetch posts: ${res.statusText}`);

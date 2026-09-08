@@ -69,11 +69,7 @@ npm run dev                  # runs on localhost:3001
 ```
 MONGODB_URI=...
 MONGODB_DB=...
-NEXT_PUBLIC_BASE_URL=http://localhost:3001   # local only, override in .env.local
 ```
-
-**Note:** `NEXT_PUBLIC_BASE_URL` in Vercel points to production URL. Preview deployments
-currently inherit this and fetch from production instead of themselves — known issue.
 
 ---
 
@@ -97,7 +93,7 @@ currently inherit this and fetch from production instead of themselves — known
 - [ ] No loading skeleton/spinner on blog list pages
 
 ### Bugs
-- [ ] Preview deployments broken: NEXT_PUBLIC_BASE_URL fetches production instead of preview
+- [x] Preview deployments broken: NEXT_PUBLIC_BASE_URL fetches production instead of preview — fixed by switching client-side API fetches to relative URLs
 - [ ] Redundant manual `id` field alongside MongoDB `_id` in every post
 
 ### Content / Pages
