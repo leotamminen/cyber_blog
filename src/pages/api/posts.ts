@@ -33,6 +33,7 @@ export default async function handler(
         // Convert `id` to `ObjectId` and query the database
         const post = await collection.findOne({
           _id: new ObjectId(id as string),
+          published: true,
         });
 
         if (!post) {
@@ -59,13 +60,13 @@ export default async function handler(
         return;
       }
     } else {
-      let query = {}; // Default query fetches all posts
+      let query: Record<string, unknown> = { published: true }; // Default query fetches all published posts
       if (pinned !== undefined) {
         const isPinned = pinned === "true";
         if (isPinned) {
-          query = { pinned: true };
+          query = { published: true, pinned: true };
         } else {
-          query = { $or: [{ pinned: false }, { pinned: { $exists: false } }] }; // Include missing `pinned`
+          query = { published: true, $or: [{ pinned: false }, { pinned: { $exists: false } }] }; // Include missing `pinned`
         }
       }
 

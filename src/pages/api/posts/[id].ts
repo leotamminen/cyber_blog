@@ -33,7 +33,7 @@ export default async function handler(
     const db = client.db(dbName);
     const post = await db
       .collection("posts")
-      .findOne({ _id: new ObjectId(id) });
+      .findOne({ _id: new ObjectId(id), published: true });
 
     if (!post) {
       res.status(404).json({ error: "Post not found" });
