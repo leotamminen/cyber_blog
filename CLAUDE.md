@@ -89,7 +89,7 @@ MONGODB_DB=...
 - [ ] ESLint 8 deprecated, upgrade to ESLint 9
 
 ### Performance
-- [ ] No caching on MongoDB fetches — every page load hits the DB
+- [x] No caching on MongoDB fetches — every page load hits the DB — fixed by adding Cache-Control headers to API route responses
 - [ ] No loading skeleton/spinner on blog list pages
 
 ### Bugs

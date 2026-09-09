@@ -40,6 +40,7 @@ export default async function handler(
       return;
     }
 
+    res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
     res.status(200).json({
       id: post._id.toString(),
       title: post.title || "Untitled",

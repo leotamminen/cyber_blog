@@ -40,6 +40,7 @@ export default async function handler(
           return;
         }
 
+        res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
         res.status(200).json({
           id: post._id.toString(),
           title: post.title || "Untitled",
@@ -81,6 +82,7 @@ export default async function handler(
         date: post.date || null,
         edited: post.edited || null,
       }));
+      res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
       res.status(200).json(sanitizedPosts);
     }
   } catch (err) {
