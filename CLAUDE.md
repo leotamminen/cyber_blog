@@ -27,6 +27,11 @@ src/
 public/          # static images (currently committed to repo)
 ```
 
+## Image Hosting
+- Cloudinary (free tier)
+- NEXT_PUBLIC_IMAGE_BASE_URL set in Vercel and .env.local
+- To add a new image: upload to Cloudinary, use src: "/filename.ext" in MongoDB
+
 ## Blog Post Structure (MongoDB)
 
 ```json
@@ -87,6 +92,8 @@ MONGODB_DB=...
 ### Security
 - [ ] 5 remaining npm vulnerabilities require Next.js major version upgrade (15 → 16)
 - [ ] ESLint 8 deprecated, upgrade to ESLint 9
+- [x] Remove metadata from all images (exiftool)
+- [x] published: true filter on all API routes — drafts not accessible via API
 
 ### Performance
 - [x] No caching on MongoDB fetches — every page load hits the DB — fixed by adding Cache-Control headers to API route responses
@@ -102,8 +109,7 @@ MONGODB_DB=...
 - [ ] Footer copyright year hardcoded as 2025
 
 ### Infrastructure
-- [ ] Images stored in /public — require a git commit to add new blog images
-  - Fix: migrate to Cloudinary free tier or similar
+- [x] Images stored in /public — require a git commit to add new blog images (migrated to Cloudinary)
 
 ---
 
