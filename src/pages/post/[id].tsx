@@ -11,6 +11,8 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 
+const imageBase = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || "";
+
 // [Click here](https://example.com) *italic* **bold**
 
 // Dynamic custom styles for CodeBlock
@@ -192,7 +194,7 @@ export default function Post() {
                   className="my-6 text-center pt-[1rem] pb-[3rem]"
                 >
                   <Image
-                    src={block.src!}
+                    src={`${imageBase}${block.src}`}
                     alt={block.alt || "Image"}
                     width={600}
                     height={400}
